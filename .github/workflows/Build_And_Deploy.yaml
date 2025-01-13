@@ -73,7 +73,7 @@ jobs:
           git add ./*.js
           git add ./*.map
           git add pages/
-          git add resources/
+          git add resources/*
           
           # Create commit
           git commit -m "completed home page development."
