@@ -47,26 +47,31 @@ jobs:
           # Remove all files from git tracking
           git rm -rf .
           
-          # Create temporary directory for organizing files
-          mkdir temp_dir
+          # Debug: List contents of build directory
+          echo "Contents of current directory:"
+          ls -la
+          echo "Contents of site/.kobweb/site:"
+          ls -la site/.kobweb/site/
           
-          # Copy only needed directories
-          cp -r site/.kobweb/site/pages temp_dir/
-          cp -r site/.kobweb/site/resources temp_dir/
+          # Copy system files first (to root level)
+          cp -r site/.kobweb/site/system/* .
           
-          # Move system files to root level
-          cp -r site/.kobweb/site/system/* temp_dir/
+          # Copy other needed directories
+          cp -r site/.kobweb/site/pages .
+          cp -r site/.kobweb/site/resources .
           
-          # Clean up and move files to final position
-          rm -rf *
-          mv temp_dir/* .
-          rm -rf temp_dir
+          # Remove the system directory since files are now at root
+          rm -rf system
+          
+          # Debug: Show final structure
+          echo "Final directory structure:"
+          ls -la
           
           # Stage all changes
           git add -A
           
           # Create commit
-          git commit -m "Update site from kobweb_latest v4"
+          git commit -m "Update site from kobweb_latest"
           
           # Force push to main
           git push --force origin temp_branch:main
