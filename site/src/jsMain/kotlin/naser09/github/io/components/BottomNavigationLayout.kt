@@ -159,8 +159,11 @@ fun BottomNavigationLayout(
         Box(Modifier.fillMaxSize().zIndex(0)) {
             content()
         }
-        TopRightControls{
-            colorMode = colorMode.opposite
+        Box(Modifier.width(100.vw)
+            .height(100.vw)){
+            TopRightControls{
+                colorMode = colorMode.opposite
+            }
         }
 
         // Navigation container with backdrop blur

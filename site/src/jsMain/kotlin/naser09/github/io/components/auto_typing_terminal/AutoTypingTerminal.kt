@@ -7,6 +7,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.style.CssStyle
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.hover
 import com.varabyte.kobweb.silk.style.toModifier
 import kotlinx.browser.document
@@ -14,6 +15,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.Color.aquamarine
 import org.jetbrains.compose.web.css.Color.black
 import org.jetbrains.compose.web.css.Color.green
 import org.jetbrains.compose.web.dom.Div
@@ -49,6 +51,9 @@ data class TerminalState(
 val TerminalStyle = CssStyle {
     base {
         Modifier
+            .fillMaxWidth()
+            .width(40.vw)
+            .margin(leftRight = 5.vw)
             .backgroundColor(black)
             .flexFlow(FlexDirection.Row, FlexWrap.Wrap)
             .color(green)
@@ -56,12 +61,17 @@ val TerminalStyle = CssStyle {
             .padding(16.px)
             .fontFamily("Courier New, monospace")
             .fontSize(18.px)
-            .width(80.percent)
-            .height(200.px)
+            .height(40.vh)
             .overflow(Overflow.Auto)
             .whiteSpace(WhiteSpace.PreWrap)
             .position(Position.Relative)
-            .resize(Resize.Both)
+            .resize(Resize.Vertical)
+    }
+    (Breakpoint.ZERO ..< Breakpoint.MD){
+        Modifier
+            .fillMaxWidth()
+            .width(90.vw)
+            .margin(leftRight = 5.vw)
     }
     hover {
         Modifier.cursor(Cursor.Text)
@@ -71,7 +81,11 @@ val TerminalStyle = CssStyle {
 @Composable
 fun AutoTypingTerminal() {
     var displayedText by remember { mutableStateOf("") }
-    val fullText = "Welcome to My Portfolio!\nExplore my projects and journey in tech.\n type 'help' commands to see available commands."
+    val fullText = "Welcome to my portfolio! I'm a passionate self-taught Kotlin Multiplatform developer with a knack for building cross-platform apps that work seamlessly on Android, iOS, web, and desktop.\n" +
+            "\n" +
+            "Here, you’ll find projects that showcase my journey, skills, and dedication to creating efficient, user-friendly, and visually appealing applications. Whether it’s crafting intuitive UIs, optimizing backend logic, or exploring new technologies, I’m always eager to learn and improve.\n" +
+            "\n" +
+            "Feel free to explore my work and reach out if you’d like to collaborate or learn more about what I do!"
     val directoryPrompt = "Root@Naser:~> "
     var cursorVisible by remember { mutableStateOf(true) }
     var isTypingDone by remember { mutableStateOf(false) }
@@ -85,7 +99,9 @@ fun AutoTypingTerminal() {
     // Define available commands
     val commands = remember {
         mapOf(
-            "help" to "Available commands: help, clear, about, projects",
+            "help" to "Available commands: help, clear, about, projects , hi/hello ",
+            "hi" to fullText,
+            "hello" to fullText,
             "about" to "I'm a software developer passionate about Kotlin and Android development.",
             "projects" to "1. Project A - Android App\n2. Project B - Web Application",
             "clear" to "CLEAR_COMMAND"
@@ -124,13 +140,15 @@ fun AutoTypingTerminal() {
         val welcomeOutput = TerminalOutput("Booting.....",fullText, OutputType.WELCOME)
         for (i in welcomeOutput.content.indices) {
             displayedText ="Booting.....\n"+ welcomeOutput.content.substring(0, i + 1)
-            delay(100)
+            delay(30)
             scrollToBottom()
         }
         terminalState = terminalState.copy(
             outputs = listOf(Pair(TerminalCommand("Booting....."),welcomeOutput))
         )
         isTypingDone = true
+        delay(300)
+        scrollToBottom()
     }
 
     // Cursor blinking effect
