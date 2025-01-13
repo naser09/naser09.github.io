@@ -58,7 +58,7 @@ jobs:
           
           # Copy other needed directories
           cp -r site/.kobweb/site/pages .
-          cp -r site/.kobweb/site/resources .
+          cp -r site/.kobweb/site/resources/* .
           
           # Remove the system directory since files are now at root
           rm -rf system
@@ -74,7 +74,7 @@ jobs:
           git add ./*.map
           git add pages/
           git add resources/*
-          git add Resources/*
+          git add icons/*
           
           # Create commit
           git commit -m "completed home page development."
