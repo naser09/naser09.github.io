@@ -1,0 +1,51 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - kobweb_latest
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean
+          ./gradlew :site:kobwebExport
+
+      - name: Copy Build Output
+        run: |
+          # Remove everything in root except .git and site directory
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'site' -exec rm -rf {} +
+          # Copy the exported site content to root
+          cp -r site/.kobweb/site/* .
+          rm -rf site
+
+      - name: Commit and Push to Main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update site from kobweb_latest"
+          git push origin HEAD:main
