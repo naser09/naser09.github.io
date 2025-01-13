@@ -12,15 +12,11 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout Code
+      - name: Checkout kobweb_latest
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: main  # First checkout main branch
-
-      - name: Fetch Latest Changes
-        run: |
-          git fetch origin kobweb_latest
+          ref: kobweb_latest  # First checkout kobweb_latest branch
 
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -36,7 +32,6 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          git checkout kobweb_latest  # Switch to kobweb_latest to build
           ./gradlew clean
           ./gradlew :site:kobwebExport
 
@@ -46,15 +41,14 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Switch back to main branch
-          git checkout main
+          # Create a new orphan branch (temporary)
+          git checkout --orphan temp_branch
           
-          # Remove all files except .git and site
-          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'site' -exec rm -rf {} +
+          # Remove all files from git tracking
+          git rm -rf .
           
-          # Copy the exported site content to root
+          # Copy the exported site content
           cp -r site/.kobweb/site/* .
-          rm -rf site
           
           # Stage all changes
           git add -A
@@ -62,5 +56,9 @@ jobs:
           # Create commit
           git commit -m "Update site from kobweb_latest"
           
-          # Force push to main (use with caution!)
-          git push --force origin main
+          # Force push to main
+          git push --force origin temp_branch:main
+          
+          # Clean up
+          git checkout kobweb_latest
+          git branch -D temp_branch
