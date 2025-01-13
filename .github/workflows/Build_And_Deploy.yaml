@@ -68,10 +68,15 @@ jobs:
           ls -la
           
           # Stage all changes
-          git add -A
+          # git add -A // added all files
+          git add ./*.html
+          git add ./*.js
+          git add ./*.map
+          git add pages/
+          git add resources/
           
           # Create commit
-          git commit -m "Update site from kobweb_latest"
+          git commit -m "Update site from kobweb_latest v6"
           
           # Force push to main
           git push --force origin temp_branch:main
