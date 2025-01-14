@@ -36,40 +36,40 @@ jobs:
           ./gradlew :site:kobwebExport
 
       - name: Prepare and Push to Main
+        continue-on-error: true
         run: |
           # Configure git
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Create temp directory and copy files first
-          mkdir -p temp_holding
-          cp -r site/.kobweb/site/* temp_holding/ || echo "Warning: Copy may have partially failed"
-          
-          # Create new orphan branch
+          # Create a new orphan branch
           git checkout --orphan temp_branch
           
-          # Clear the working directory while preserving temp_holding
-          find . -mindepth 1 -maxdepth 1 ! -name 'temp_holding' -exec rm -rf {} +
+          # Remove all files from git tracking
+          git rm -rf .
           
-          # Copy files from temp holding to working directory
-          cp -r temp_holding/system*/* . || echo "Warning: system copy failed"
-          cp -r temp_holding/resources/* . || echo "Warning: resources copy failed"
-          cp -r temp_holding/pages . || echo "Warning: pages copy failed"
+          # doing stuff
+          mkdir -p temp
+          cp -a site/.kobweb/site/* temp/
+          rm -rf $(ls -A | grep -v temp)
+          rm -rf .git site .github gradle* settings.gradle.kts build.gradle.kts
+          rm -f .gitignore
+          cp -r temp/system*/* .
+          cp -r temp/resources/* .
+          cp -r temp/pages .
+          rm -rf temp
+          git add -A
           
-          # Clean up temp directory
-          rm -rf temp_holding
-          
-          # Debug: show current directory contents
+          # Printing
           echo "Contents of current directory:"
           ls -la
           
-          # Stage and commit changes
-          git add -A
-          git commit -m "Updated Kobweb site build"
+          # Create commit
+          git commit -m "updated workflow . again"
           
-          # Push to main branch
+          # Force push to main
           git push --force origin temp_branch:main
           
           # Clean up
-          git checkout kobweb_latest || echo "Warning: couldn't checkout kobweb_latest"
-          git branch -D temp_branch || echo "Warning: couldn't delete temp_branch"
+          git checkout kobweb_latest
+          git branch -D temp_branch
