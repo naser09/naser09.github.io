@@ -41,31 +41,32 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
+          # Initialize git repository in the current directory
+          git init
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          
           # Create a new orphan branch
           git checkout --orphan temp_branch
           
-          # Remove all files from git tracking
-          git rm -rf .
-               
+          # Remove all files from git tracking but keep them in the directory
+          git rm -rf --cached .
+          
+          # Copy required files
           mkdir -p temp
           cp -a site/.kobweb/site/* temp/
-          rm -rf $(ls -A | grep -v temp)
+          rm -rf $(ls -A | grep -v 'temp')
           cp -r temp/system*/* .
           cp -r temp/resources/* .
           cp -r temp/pages .
           rm -rf temp
+          
+          # Add and commit changes
           git add -A
+          git commit -m "Updated workflow from Kobweb build"
           
-          echo "Contents of current directory:"
-          ls -la
-          echo "Will be added to main branch"
-          
-          # Create commit
-          git commit -m "updated workflow ."
-          
-          # Force push to main
-          git push --force origin temp_branch:main
+          # Force push to main using GITHUB_TOKEN
+          git push -f "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" temp_branch:main
           
           # Clean up
-          git checkout kobweb_latest
-          git branch -D temp_branch
+          cd ..
+          rm -rf .git
