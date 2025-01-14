@@ -60,6 +60,7 @@ jobs:
 #          # Debug: List contents of build directory
           echo "Contents of current directory:"
           ls -la
+          echo "Will be added to main branch"
 #          echo "Contents of site/.kobweb/site:"
 #          ls -la site/.kobweb/site/
 #          
