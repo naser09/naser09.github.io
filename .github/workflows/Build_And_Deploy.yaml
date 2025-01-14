@@ -51,14 +51,13 @@ jobs:
           # doing stuff
           mkdir -p temp
           cp -a site/.kobweb/site/* temp/
-          rm -rf $(ls -A | grep -v temp)
-          rm -rf .git site .github gradle* settings.gradle.kts build.gradle.kts
-          rm -f .gitignore
           cp -r temp/system*/* .
           cp -r temp/resources/* .
           cp -r temp/pages .
           rm -rf temp
-          git add -A
+          git add ./* && git reset -- ./*/*
+          git add pages
+          git add icons
           
           # Printing
           echo "Contents of current directory:"
