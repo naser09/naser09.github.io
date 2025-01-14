@@ -55,40 +55,10 @@ jobs:
           cp -r temp/pages .
           rm -rf temp
           git add -A
-               
-
-#          # Debug: List contents of build directory
+          
           echo "Contents of current directory:"
           ls -la
           echo "Will be added to main branch"
-#          echo "Contents of site/.kobweb/site:"
-#          ls -la site/.kobweb/site/
-#          
-#          # Copy system files first (to root level)
-#          cp -r site/.kobweb/site/system/* .
-#          cp -r site/.kobweb/site/resources/* .
-#          
-#          # Copy other needed directories
-#          cp -r site/.kobweb/site/pages .
-#          cp -r site/.kobweb/site/resources/* .
-#          
-#          # Remove the system directory since files are now at root
-#          rm -rf system
-#          
-#          
-#          # Debug: Show final structure
-#          echo "Final directory structure:"
-#          ls -la
-#          
-#          # Stage all changes
-#          # git add -A // added all files
-##          git add ./*.html
-##          git add ./*.js
-##          git add ./*.map
-#          git add ./*.*
-#          git add pages/
-#          git add resources/*
-#          git add icons/*
           
           # Create commit
           git commit -m "updated workflow ."
