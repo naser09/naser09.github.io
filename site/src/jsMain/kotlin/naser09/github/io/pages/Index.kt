@@ -56,10 +56,11 @@ fun HomePage() {
                 .onMouseMove { scrolled = true }
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth().maxWidth(1200.px).margin { auto }
-                    .padding(24.px)
+                modifier = Modifier.width(100.vw)
+                    .margin { auto }
+                    .padding(leftRight = 4.vw),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 if (breakpoint >= Breakpoint.MD){
                     Row(Modifier.width(100.vw),
                         verticalAlignment = Alignment.Top,
@@ -76,7 +77,6 @@ fun HomePage() {
                 }else{
                     // Hero Section with responsive layout
                     HeroSection(colorMode)
-
                     // Tech Stack
                     TechStackSection()
                 }

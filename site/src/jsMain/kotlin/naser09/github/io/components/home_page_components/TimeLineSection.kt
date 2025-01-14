@@ -10,10 +10,13 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.style.CssStyle
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.hover
 import com.varabyte.kobweb.silk.style.toModifier
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.dom.*
 
 data class TimelineItem(
@@ -193,15 +196,14 @@ fun TimelineSection(colorMode: ColorMode) {
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(92.vw)
             .overflow(Overflow.Auto)
             .scrollBehavior(ScrollBehavior.Smooth)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                // Remove fixed height from container to allow natural content flow
-                .minHeight(100.vh)
+            modifier = Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround
         ) {
             timelineItems.forEachIndexed { index, item ->
                 TimelineItemView(
@@ -220,52 +222,79 @@ private fun TimelineItemView(
     isLeft: Boolean,
     colorMode: ColorMode
 ) {
+    val breakpoint = rememberBreakpoint()
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(80.vh)
+            .width(92.vw)
+            .height(100.vh)
             .scrollSnapAlign(ScrollSnapAlign.Center)
             .position(Position.Relative)
     ) {
         // Timeline line
-        Box(
-            modifier = Modifier
-                .position(Position.Absolute)
-                .left(50.percent)
-                .width(2.px)
-                .height(100.percent)
-                .backgroundColor(if (colorMode == ColorMode.LIGHT)
-                    Color("rgba(0, 0, 0, 0.2)")
-                else
-                    Color("rgba(255, 255, 255, 0.2)")
-                )
-        )
+        if (breakpoint>=Breakpoint.MD){
+            Box(
+                modifier = Modifier
+                    .position(Position.Absolute)
+                    .left(50.percent)
+                    .width(2.px)
+                    .height(100.percent)
+                    .backgroundColor(if (colorMode == ColorMode.LIGHT)
+                        Color("rgba(0, 0, 0, 0.2)")
+                    else
+                        Color("rgba(255, 255, 255, 0.2)")
+                    )
+            )
+        }
 
         // Year text
-        Span(
-            attrs = Modifier
-                .position(Position.Absolute)
-                .top(50.percent)
-                .left(if (isLeft) 75.percent else 25.percent)
-                .transform { translateY((-50).percent) }
-                .then(YearStyle.toModifier())
-                .toAttrs()
-        ) {
-            Text(item.year)
+        if (breakpoint>=Breakpoint.MD){
+            Span(
+                attrs = Modifier
+                    .position(Position.Absolute)
+                    .top(50.percent)
+                    .left(if (isLeft) 75.percent else 25.percent)
+                    .transform { translateY((-50).percent) }
+                    .then(YearStyle.toModifier())
+                    .toAttrs()
+            ) {
+                Text(item.year)
+            }
         }
 
         // Content card
         Box(
-            modifier = Modifier
-                .position(Position.Absolute)
-                .width(45.percent)
-                .left(if (isLeft) 2.percent else 53.percent)
-                .top(50.percent)
-                .transform { translateY((-50).percent) }
-                .padding(20.px)
-                .then(TimelineCardStyle.toModifier())
+            modifier = if (breakpoint>=Breakpoint.MD){
+                Modifier
+                    .position(Position.Absolute)
+                    .width(45.percent)
+                    .left(if (isLeft) 2.percent else 53.percent)
+                    .top(50.percent)
+                    .transform { translateY((-50).percent) }
+                    .padding(20.px)
+                    .then(TimelineCardStyle.toModifier())
+            }else{
+                Modifier
+                    .position(Position.Absolute)
+                    .width(90.percent)
+                    .left(50.percent)
+                    .top(50.percent)
+                    .transform { translateY((-50).percent) }
+                    .transform { translateX((-50).percent) }
+                    .padding(5.px)
+                    .then(TimelineCardStyle.toModifier())
+            }
         ) {
             Column(modifier = Modifier.gap(16.px)) {
+                if (breakpoint < Breakpoint.MD){
+                    Span(
+                        attrs = Modifier
+                            .padding(bottom = 15.px)
+                            .then(YearStyle.toModifier())
+                            .toAttrs()
+                    ) {
+                        Text(item.year)
+                    }
+                }
                 H2(attrs = Modifier
                     .margin(0.px)
                     .fontSize(24.px)

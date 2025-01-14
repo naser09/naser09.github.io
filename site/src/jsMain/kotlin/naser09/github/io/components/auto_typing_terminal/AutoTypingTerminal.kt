@@ -1,6 +1,7 @@
 package naser09.github.io.components.auto_typing_terminal
 
 import androidx.compose.runtime.*
+import com.varabyte.kobweb.browser.dom.observers.IntersectionObserver
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -23,6 +24,7 @@ import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
+import org.w3c.dom.events.FocusEvent
 import org.w3c.dom.events.KeyboardEvent
 
 // Data classes for structured output
@@ -52,6 +54,23 @@ val TerminalStyle = CssStyle {
     base {
         Modifier
             .fillMaxWidth()
+            .width(90.vw)
+            .margin(leftRight = 5.vw)
+            .backgroundColor(black)
+            .flexFlow(FlexDirection.Row, FlexWrap.Wrap)
+            .color(green)
+            .border(2.px, LineStyle.Solid, green)
+            .padding(8.px)
+            .fontFamily("Courier New, monospace")
+            .fontSize(18.px)
+            .height(60.vh)
+            .overflow(Overflow.Auto)
+            .whiteSpace(WhiteSpace.PreWrap)
+            .position(Position.Relative)
+    }
+    (Breakpoint.MD){
+        Modifier
+            .fillMaxWidth()
             .width(40.vw)
             .margin(leftRight = 5.vw)
             .backgroundColor(black)
@@ -67,12 +86,6 @@ val TerminalStyle = CssStyle {
             .position(Position.Relative)
             .resize(Resize.Vertical)
     }
-    (Breakpoint.ZERO ..< Breakpoint.MD){
-        Modifier
-            .fillMaxWidth()
-            .width(90.vw)
-            .margin(leftRight = 5.vw)
-    }
     hover {
         Modifier.cursor(Cursor.Text)
     }
@@ -80,6 +93,26 @@ val TerminalStyle = CssStyle {
 
 @Composable
 fun AutoTypingTerminal() {
+    DisposableEffect(Unit){
+        window.addEventListener("DOMContentLoaded",{event: Event ->
+            val element = document.getElementById("terminal_container")
+            if (element==null){
+                console.log("null element")
+                return@addEventListener
+            }
+            val op = IntersectionObserver.Options(thresholds = listOf(0.9))
+            val observer = IntersectionObserver(op) { entries ->
+                if (entries.any { it.isIntersecting }){
+                    window.focus()
+                }
+            }
+            observer.observe(element)
+            onDispose { observer.disconnect() }
+        })
+        onDispose {
+
+        }
+    }
     var displayedText by remember { mutableStateOf("") }
     val fullText = "Welcome to my portfolio! I'm a passionate self-taught Kotlin Multiplatform developer with a knack for building cross-platform apps that work seamlessly on Android, iOS, web, and desktop.\n" +
             "\n" +

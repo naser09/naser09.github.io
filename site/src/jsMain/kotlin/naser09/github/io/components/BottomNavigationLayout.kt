@@ -195,11 +195,10 @@ fun TopRightControls(onClick:()->Unit) {
     val isDark = colorMode == ColorMode.DARK
         // Theme Toggle Button
     Box(modifier = Modifier
+        .margin(left = 96.percent, top = 2.percent)
         .zIndex(1)
-        .position(Position.Fixed)
-        .top(20.px)
-        .right(20.px)
-        .gap(16.px)
+        .position(Position.Fixed),
+        contentAlignment = Alignment.TopEnd
     ){
         Button(
             attrs = SocialButtonStyle.toModifier()

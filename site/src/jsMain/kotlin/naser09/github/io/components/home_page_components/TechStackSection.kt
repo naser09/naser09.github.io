@@ -120,16 +120,16 @@ fun TechStackSection() {
             stack = "Gradle"
         ),
         TechStack(
-            icon = "/icons/db.svg",
+            icon = "/icons/sql.svg",
             width = 48.px,
             height = 48.px,
-            stack = "SQL/NoSql Database"
+            stack = "SQL Databases"
         ),
         TechStack(
             icon = "/icons/db.svg",
             width = 48.px,
             height = 48.px,
-            stack = "SQL/NoSql Database"
+            stack = "NoSQL databases"
         ),
         TechStack(
             icon = "/icons/graphql.svg",
@@ -162,7 +162,6 @@ fun TechStackSection() {
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
             .margin(top = 10.vh)
     ) {
         AutoTypingTerminal()
