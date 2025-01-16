@@ -51,7 +51,7 @@ fun HomePage() {
             Modifier
                 .fillMaxWidth()
                 .minHeight(100.vh)
-                .backgroundColor(colorMode.toSitePalette().nearBackground)
+                .backgroundColor(colorMode.toSitePalette().backgroundColor)
                 .color(if (colorMode == ColorMode.DARK) white else black)
                 .onMouseMove { scrolled = true }
         ) {

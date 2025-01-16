@@ -16,6 +16,8 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.silk.components.icons.fa.*
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import naser09.github.io.components.BottomNavigationLayout
@@ -29,7 +31,8 @@ private data class Technology(
     val category: TechCategory,
     val description: String,
     val experienceYears: Float,
-    val iconPath: String = "/icons/${name.lowercase()}.svg"
+    val iconPath: String? = null,
+    val fontAwesomeIcon:(@Composable (size:IconSize)->Unit)? = null
 )
 
 private enum class TechCategory(val displayName: String) {
@@ -75,14 +78,32 @@ private val technologies = listOf(
         Proficiency.ADVANCED,
         TechCategory.LANGUAGES,
         "Used for Android development and backend services. Strong knowledge of Java 8+ features.",
-        4.0f
+        2.0f,
+        fontAwesomeIcon = { FaJava(size = it) }
     ),
     Technology(
         "Python",
         Proficiency.INTERMEDIATE,
         TechCategory.LANGUAGES,
-        "Used for data processing, scripting, and automation tasks.",
-        2.0f
+        "Basic problem solving and a single django project",
+        0.6f,
+        fontAwesomeIcon = { FaPython(size = it) }
+    ),
+    Technology(
+        "Swift",
+        Proficiency.BEGINNER,
+        TechCategory.LANGUAGES,
+        "Basic problem solving and some api that required in KMP projects",
+        0.6f,
+        fontAwesomeIcon = { FaSwift(size = it) }
+    ),
+    Technology(
+        "PHP",
+        Proficiency.INTERMEDIATE,
+        TechCategory.LANGUAGES,
+        "Basic knowledge about PHP",
+        0.8f,
+        fontAwesomeIcon = { FaPhp(size = it) }
     ),
 
     // Mobile Development
@@ -91,21 +112,32 @@ private val technologies = listOf(
         Proficiency.EXPERT,
         TechCategory.MOBILE,
         "Modern Android UI development with declarative paradigm. Built multiple production apps.",
-        3.0f
+        3.0f,
+        iconPath = "icons/compose.png"
+    ),
+    Technology(
+        "Swift UI",
+        Proficiency.BEGINNER,
+        TechCategory.MOBILE,
+        "Modern iOS UI development with declarative paradigm. Built basic apps with it.",
+        3.0f,
+        fontAwesomeIcon = { FaSwift(size = it) }
     ),
     Technology(
         "Android SDK",
         Proficiency.EXPERT,
         TechCategory.MOBILE,
         "Comprehensive knowledge of Android framework, lifecycle, and architecture components.",
-        5.5f
+        5.5f,
+        fontAwesomeIcon = { FaAndroid(size = it) }
     ),
     Technology(
         "KMP",
-        Proficiency.ADVANCED,
+        Proficiency.EXPERT,
         TechCategory.MOBILE,
         "Kotlin Multiplatform for shared logic between Android and iOS applications.",
-        2.5f
+        2.5f,
+        iconPath = "icons/kotlin.svg"
     ),
 
     // Backend
@@ -114,14 +146,16 @@ private val technologies = listOf(
         Proficiency.EXPERT,
         TechCategory.BACKEND,
         "Building scalable backend services and RESTful APIs with Kotlin.",
-        3.5f
+        3.5f,
+        fontAwesomeIcon = { FaServer(size = it) }
     ),
     Technology(
-        "Spring Boot",
-        Proficiency.ADVANCED,
+        "Laravel",
+        Proficiency.INTERMEDIATE,
         TechCategory.BACKEND,
         "Java-based framework for creating microservices and web applications.",
-        3.0f
+        3.0f,
+        fontAwesomeIcon = { FaLaravel(size = it) }
     ),
     Technology(
         "GraphQL",
@@ -134,47 +168,61 @@ private val technologies = listOf(
     // Database
     Technology(
         "PostgreSQL",
+        Proficiency.INTERMEDIATE,
+        TechCategory.DATABASE,
+        "Primary database for production applications. Experience with performance optimization.",
+        4.0f,
+        iconPath = "icons/sql.svg"
+    ),
+    Technology(
+        "MySQL",
         Proficiency.ADVANCED,
         TechCategory.DATABASE,
         "Primary database for production applications. Experience with performance optimization.",
-        4.0f
+        4.0f,
+        iconPath = "icons/sql.svg"
     ),
     Technology(
         "MongoDB",
         Proficiency.INTERMEDIATE,
         TechCategory.DATABASE,
         "NoSQL database for flexible data storage needs.",
-        2.0f
+        2.0f,
+        iconPath = "icons/db.svg"
     ),
     Technology(
         "Redis",
         Proficiency.ADVANCED,
         TechCategory.DATABASE,
         "In-memory data structure store used for caching and real-time data.",
-        3.0f
+        3.0f,
+        iconPath = "icons/db.svg"
     ),
 
     // Cloud & DevOps
     Technology(
         "Docker",
-        Proficiency.ADVANCED,
+        Proficiency.BEGINNER,
         TechCategory.CLOUD,
         "Containerization for microservices and application deployment.",
-        3.0f
+        3.0f,
+        fontAwesomeIcon = { FaDocker(size = it) }
     ),
     Technology(
-        "Kubernetes",
-        Proficiency.INTERMEDIATE,
+        "Github Actions",
+        Proficiency.BEGINNER,
         TechCategory.CLOUD,
-        "Container orchestration for scaling and managing applications.",
-        2.0f
+        "Understand and to the bare minimum about GitHub Actions. check this website repo > kobweb_latest branch .",
+        2.0f,
+        fontAwesomeIcon = { FaGithub(size = it) }
     ),
     Technology(
-        "AWS",
+        "VPS Server",
         Proficiency.ADVANCED,
         TechCategory.CLOUD,
-        "Cloud infrastructure and services for application hosting and deployment.",
-        3.5f
+        "Have Experience on running a vps server with Debian and ubuntu.",
+        3.5f,
+        fontAwesomeIcon = { FaLinux(size = it) }
     ),
 
     // Frontend
@@ -183,37 +231,26 @@ private val technologies = listOf(
         Proficiency.ADVANCED,
         TechCategory.FRONTEND,
         "Web development fundamentals with modern CSS features.",
-        4.0f
-    ),
-    Technology(
-        "JavaScript",
-        Proficiency.INTERMEDIATE,
-        TechCategory.FRONTEND,
-        "Frontend development with modern JavaScript and ES6+ features.",
-        2.5f
-    ),
-    Technology(
-        "React",
-        Proficiency.INTERMEDIATE,
-        TechCategory.FRONTEND,
-        "Building interactive web applications with React ecosystem.",
-        2.0f
+        4.0f,
+        fontAwesomeIcon = { FaHtml5(size = it) }
     ),
 
     // Tools
     Technology(
         "Git",
-        Proficiency.EXPERT,
+        Proficiency.INTERMEDIATE,
         TechCategory.TOOLS,
         "Version control and collaboration with Git and GitHub.",
-        5.0f
+        5.0f,
+        fontAwesomeIcon = { FaGit(size = it) }
     ),
     Technology(
         "CI/CD",
-        Proficiency.ADVANCED,
+        Proficiency.BEGINNER,
         TechCategory.TOOLS,
         "Automated testing and deployment pipelines with Jenkins and GitHub Actions.",
-        3.5f
+        3.5f,
+        fontAwesomeIcon = { FaRobot(size = it) }
     ),
     Technology(
         "Gradle",
@@ -245,7 +282,9 @@ fun TechStackPage() {
                 PageHeader(
                     "Tech Stack",
                     "My Technical Expertise & Tools",
-                    colorMode
+                    colorMode,
+                    if (colorMode.isLight) "icons/gear.svg" else "icons/gear-white.svg",
+                    ""
                 )
 
                 TechStackContent(colorMode, breakpoint)
@@ -279,15 +318,7 @@ private fun TechStackContent(colorMode: ColorMode, breakpoint: Breakpoint) {
             colorMode = colorMode,
             breakpoint = breakpoint
         )
-
-        // Stats
-        TechStats(
-            technologies = technologies,
-            selectedCategory = selectedCategory,
-            selectedProficiency = selectedProficiency,
-            colorMode = colorMode
-        )
-
+        HorizontalDivider(Modifier.fillMaxWidth().height(1.vh))
         // Tech Grid
         val filteredTech = technologies.filter { tech ->
             (selectedCategory == null || tech.category == selectedCategory) &&
@@ -382,37 +413,6 @@ private fun Filters(
     }
 }
 
-@Composable
-private fun TechStats(
-    technologies: List<Technology>,
-    selectedCategory: TechCategory?,
-    selectedProficiency: Proficiency?,
-    colorMode: ColorMode
-) {
-    val filteredTech = technologies.filter { tech ->
-        (selectedCategory == null || tech.category == selectedCategory) &&
-                (selectedProficiency == null || tech.proficiency == selectedProficiency)
-    }
-
-    val totalYears = filteredTech.sumOf { it.experienceYears.toDouble() }
-    val expertCount = filteredTech.count { it.proficiency == Proficiency.EXPERT }
-    val techCount = filteredTech.size
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .gap(24.px)
-            .padding(8.px)
-            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgba(255, 255, 255, 0.05f)
-            else Color.rgba(0, 0, 0, 0.05f))
-            .borderRadius(8.px)
-    ) {
-        StatItem("Technologies", techCount.toString(), colorMode)
-        StatItem("Expert Level", expertCount.toString(), colorMode)
-//        StatItem("Years Experience", "%.1f"//.format(totalYears)
-//            , colorMode)
-    }
-}
 
 @Composable
 private fun StatItem(label: String, value: String, colorMode: ColorMode) {
@@ -498,6 +498,7 @@ private fun TechCard(
     tech: Technology,
     colorMode: ColorMode
 ) {
+    val breakpoint = rememberBreakpoint()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -506,7 +507,8 @@ private fun TechCard(
             .styleModifier {
                 property("box-shadow", "0 4px 6px rgba(0, 0, 0, 0.1)")
                 property("transition", "all 0.3s ease")
-            }
+            },
+        contentAlignment = Alignment.TopCenter
 //            .hover(
 //                Modifier.styleModifier {
 //                    property("transform", "translateY(-5px)")
@@ -528,10 +530,14 @@ private fun TechCard(
                     .alignItems(org.jetbrains.compose.web.css.AlignItems.Center)
                     .justifyContent(com.varabyte.kobweb.compose.css.JustifyContent.Center)
             ) {
-                Image(
-                    src = "/icons/${tech.name.lowercase()}.svg",
-                    modifier = Modifier.size(32.px)
-                )
+                if (tech.fontAwesomeIcon!=null){
+                    tech.fontAwesomeIcon.invoke(if (breakpoint>Breakpoint.MD) IconSize.LG else IconSize.SM)
+                }else{
+                    Image(
+                        src = tech.iconPath ?: "/icons/${tech.name.lowercase()}.svg",
+                        modifier = Modifier.size(32.px)
+                    )
+                }
             }
 
             // Tech Name

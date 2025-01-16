@@ -64,7 +64,7 @@ jobs:
           ls -la
           
           # Create commit
-          git commit -m "updated workflow . again"
+          git commit -m "updated all pages except projects"
           
           # Force push to main
           git push --force origin temp_branch:main

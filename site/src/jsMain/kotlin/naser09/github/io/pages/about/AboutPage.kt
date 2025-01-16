@@ -18,6 +18,7 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.silk.components.icons.fa.FaPerson
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import naser09.github.io.components.BottomNavigationLayout
 import naser09.github.io.components.PageHeader
@@ -73,7 +74,9 @@ fun AboutPage() {
                 PageHeader(
                     "About Me",
                     "Passionate Kotlin developer building cross-platform solutions",
-                    colorMode
+                    colorMode,
+                    icon = if (colorMode.isLight) "icons/identity.svg" else "icons/identity-white.svg"
+                    ,""
                 )
 
                 AboutContent(colorMode, breakpoint, personalInfo, skills)
@@ -134,14 +137,15 @@ private fun ProfileImage(colorMode: ColorMode) {
             .size(300.px)
             .borderRadius(16.px)
             .overflow(Overflow.Hidden)
+            .backgroundColor(BackgroundColor.Transparent)
 
            // .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.3)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
     ) {
         Image(
-            src = "/profile.jpg",
+            src = "icons/profile.png",
             modifier = Modifier
                 .fillMaxSize()
-                .objectFit(ObjectFit.Cover)
+                .objectFit(ObjectFit.Contain)
                 .transition(Transition.of("transform", 300.ms))
                 .styleModifier {
                     property("hover", "transform: scale(1.05)")

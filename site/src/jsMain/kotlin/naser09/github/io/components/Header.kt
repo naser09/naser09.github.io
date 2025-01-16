@@ -3,22 +3,22 @@ package naser09.github.io.components
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.background
+import com.varabyte.kobweb.compose.css.color
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.ui.Alignment
-import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.navigation.OpenLinkStrategy
 import com.varabyte.kobweb.navigation.open
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import kotlinx.browser.window
-import org.jetbrains.compose.web.css.AlignItems
-import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.vh
+import naser09.github.io.toSitePalette
+import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.Color.black
+import org.jetbrains.compose.web.css.Color.white
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.P
@@ -30,13 +30,14 @@ fun PageHeader(
     title: String,
     subtitle: String,
     colorMode: ColorMode,
-    icon: String = "icons/youtube.svg",
+    icon: String,
+    links:String
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .minHeight(40.vh)
-            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(25, 25, 25) else Color.rgb(245, 245, 245))
+            .backgroundColor(colorMode.toSitePalette().backgroundColor)
             .padding(24.px),
         contentAlignment = Alignment.Center
     ) {
@@ -49,10 +50,14 @@ fun PageHeader(
                 .alignItems(AlignItems.Center)
                 .cursor(Cursor.Pointer)
                 .onClick {
-                    window.open("https://www.youtube.com/@nCodeLab", OpenLinkStrategy.IN_NEW_TAB)
+                    if (links.isNotBlank() || links.isNotBlank()){
+                        window.open(links, OpenLinkStrategy.IN_NEW_TAB)
+                    }
                 }
                 .toAttrs()) {
-                Image(src = icon, modifier = Modifier.maxHeight(48.px).margin(right = 6.px))
+                Image(src = icon, modifier = Modifier
+                    .maxHeight(48.px)
+                    .margin(right = 6.px))
                 H1(
                     attrs = Modifier
                         .fontSize(48.px)

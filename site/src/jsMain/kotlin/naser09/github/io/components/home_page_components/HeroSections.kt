@@ -1,6 +1,7 @@
 package naser09.github.io.components.home_page_components
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.css.BackgroundColor
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -47,12 +48,12 @@ import org.jetbrains.compose.web.dom.*
             modifier = Modifier
                 .size(200.px)
                 .borderRadius(50.percent)
-                .backgroundColor(Color.rgb(40, 40, 40))
                 .overflow(Overflow.Hidden)
         ) {
             Image(
-                src = "https://avatars.githubusercontent.com/u/75668297?v=4",
+                src = "icons/profile.png",
                 modifier = Modifier
+                    .backgroundColor(BackgroundColor.Transparent)
                     .fillMaxSize()
                     .objectFit(ObjectFit.Cover)
                     .styleModifier {

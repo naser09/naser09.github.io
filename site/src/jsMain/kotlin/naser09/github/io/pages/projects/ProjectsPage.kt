@@ -83,7 +83,8 @@ fun ProjectsPage() {
                     "Projects",
                     "Senior Kotlin Developer specialized in Multiplatform Development and Backend Services",
                     colorMode,
-                    "icons/github.svg"
+                    "icons/github.svg",
+                    ""
                 )
 
                 ProjectsGrid(colorMode)

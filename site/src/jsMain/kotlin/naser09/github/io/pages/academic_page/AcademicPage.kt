@@ -86,6 +86,7 @@ fun AcademicPage() {
                 .minHeight(100.vh)
                 .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else Color.rgb(250, 250, 250))
                 .color(if (colorMode == ColorMode.DARK) Color.rgb(240, 240, 240) else Color.rgb(33, 33, 33))
+                .margin(bottom = 13.vh)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -94,7 +95,9 @@ fun AcademicPage() {
                 PageHeader(
                     "Academic Journey",
                     "A timeline of my educational achievements and experiences",
-                    colorMode
+                    colorMode,
+                    "icons/book.svg",
+                    ""
                 )
 
                 AcademicContent(academics, colorMode, breakpoint)
@@ -114,7 +117,8 @@ private fun AcademicContent(
             .fillMaxWidth(if (breakpoint >= Breakpoint.MD) 80.percent else 95.percent)
             .maxWidth(1000.px)
             .padding(24.px)
-            .gap(32.px)
+            .gap(32.px),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Summary Section
         Box(
@@ -125,7 +129,10 @@ private fun AcademicContent(
                 .borderRadius(12.px)
 //                .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.2)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
         ) {
-            Column(modifier = Modifier.gap(16.px)) {
+            Column(modifier = Modifier.gap(16.px)
+                .alignContent(org.jetbrains.compose.web.css.AlignContent.Center)
+                .alignItems(com.varabyte.kobweb.compose.css.AlignItems.Center),
+                horizontalAlignment = Alignment.CenterHorizontally) {
                 H2(
                     attrs = Modifier
                         .fontSize(if (breakpoint >= Breakpoint.MD) 32.px else 24.px)
@@ -148,7 +155,7 @@ private fun AcademicContent(
         }
 
         // Academic Timeline
-        Column(modifier = Modifier.gap(32.px)) {
+        Column(modifier = Modifier.gap(32.px), horizontalAlignment = Alignment.CenterHorizontally) {
             academics.forEach { academic ->
                 AcademicCard(academic, colorMode, breakpoint)
             }

@@ -1,9 +1,7 @@
 package naser09.github.io
 
-import com.varabyte.kobweb.compose.css.Filter
-import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.Transition
-import com.varabyte.kobweb.compose.css.WhiteSpace
 import com.varabyte.kobweb.compose.css.functions.CSSFilter
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -20,9 +18,11 @@ import com.varabyte.kobweb.silk.theme.colors.palette.color
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.Color.black
 import org.jetbrains.compose.web.css.Color.green
+import org.jetbrains.compose.web.css.Color.whitesmoke
 
 class SitePalette(
     val nearBackground: Color,
+    val backgroundColor: CSSColorValue,
     val cobweb: Color,
     val brand: Brand,
 ) {
@@ -36,7 +36,8 @@ class SitePalette(
 
 object SitePalettes {
     val light = SitePalette(
-        nearBackground = Color.rgb(0xF8F9FD).darkened(0.15f),  // Pearl white
+        nearBackground = Color.rgb(0xF8F9FD),  // Pearl white
+        backgroundColor = whitesmoke,
         cobweb = Color.rgb(0xE8E8E8),          // Platinum light
         brand = SitePalette.Brand(
             primary = Color.rgb(0x4A90E2),      // Steel blue
@@ -48,6 +49,7 @@ object SitePalettes {
 
     val dark = SitePalette(
         nearBackground = Color.rgb(0x1A1F2E),   // Deep navy metallic
+        backgroundColor = Color.rgb(18, 18, 18),
         cobweb = Color.rgb(0x2C3144),          // Gunmetal
         brand = SitePalette.Brand(
             primary = Color.rgb(0x6FB2FF),      // Electric blue metallic
