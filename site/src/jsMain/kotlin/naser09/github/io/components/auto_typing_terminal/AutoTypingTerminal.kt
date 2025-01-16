@@ -15,13 +15,16 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.Color.aquamarine
 import org.jetbrains.compose.web.css.Color.black
 import org.jetbrains.compose.web.css.Color.green
 import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
 import org.w3c.dom.events.FocusEvent
@@ -103,6 +106,8 @@ fun AutoTypingTerminal() {
             val op = IntersectionObserver.Options(thresholds = listOf(0.9))
             val observer = IntersectionObserver(op) { entries ->
                 if (entries.any { it.isIntersecting }){
+                    val input = document.getElementById("input") as HTMLInputElement
+                    input.focus()
                     window.focus()
                 }
             }
@@ -284,6 +289,7 @@ fun AutoTypingTerminal() {
                 Div {
                     Text(directoryPrompt + output.first.command +"\n")
                     Text(output.second.content)
+                    Input(InputType.Hidden, attrs = Modifier.id("input").toAttrs())
 //                    if (output.type == OutputType.COMMAND) {
 //                    } else {
 //                        Text(output.content)

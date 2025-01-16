@@ -3,6 +3,8 @@ package naser09.github.io.pages.youtube
 import androidx.compose.runtime.*
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.Transition
+import com.varabyte.kobweb.compose.dom.ElementRefScope
+import com.varabyte.kobweb.compose.dom.registerRefScope
 import com.varabyte.kobweb.compose.foundation.layout.*
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -12,169 +14,273 @@ import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.style.*
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.css.keywords.auto
 import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
-import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.components.icons.fa.FaYoutube
+import com.varabyte.kobweb.silk.style.CssRule
+import com.varabyte.kobweb.silk.style.animation.Keyframes
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.cssRules
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import naser09.github.io.components.BottomNavigationLayout
 import naser09.github.io.components.PageHeader
+import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.attributes.placeholder
 import org.jetbrains.compose.web.css.Color.white
 import org.jetbrains.compose.web.css.Color.black
+import org.w3c.dom.Element
+import org.w3c.dom.HTMLIFrameElement
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.css.CSSRule
+import kotlin.time.Duration.Companion.seconds
 
-private data class Video(
+data class VideoItem(
+    val srcId:String,
     val title: String,
-    val thumbnail: String,
-    val youtubeLink: String
+    val category:String,
+    val fullSrcUrl:String?=null,
+    val width: String?=null,
+    val height: String? = null
 )
-// YouTube Videos Page
+val myVideos = listOf(
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin multiplatform tutorial part 1","Kotlin Multiplatform",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin multiplatform tutorial part 2","Kotlin Multiplatform",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin multiplatform tutorial part 3","Kotlin Multiplatform",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin multiplatform tutorial part 4","Kotlin Multiplatform",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin multiplatform tutorial part 5","Kotlin Multiplatform",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin multiplatform tutorial part 6","Kotlin Multiplatform",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin multiplatform tutorial part 7","Kotlin Multiplatform",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin fundamental tutorial part 1","Kotlin Basics",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin fundamental tutorial part 2","Kotlin Basics",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin fundamental tutorial part 3","Kotlin Basics",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin fundamental tutorial part 4","Kotlin Basics",null),
+    VideoItem(  srcId = "RJhR9oPOrj0","Kotlin fundamental tutorial part 5","Kotlin Basics",null),
+)
+
 @Page("/video")
 @Composable
 fun YouTubePage() {
-    var colorMode by remember { mutableStateOf(ColorMode.DARK) }
+    var colorMode by ColorMode.currentState
+    var searchQuery by remember { mutableStateOf("") }
+    val breakpoint = rememberBreakpoint()
+
+    // Theme colors
+    val primaryColor = if (colorMode == ColorMode.DARK) {
+        Color.rgb(18, 18, 18)
+    } else {
+        Color.rgb(250, 250, 250)
+    }
+
+    val secondaryColor = if (colorMode == ColorMode.DARK) {
+        Color.rgb(30, 30, 30)
+    } else {
+        Color.rgb(240, 240, 240)
+    }
+
+    val accentColor = Color.rgb(255, 0, 0)
+    val textColor = if (colorMode == ColorMode.DARK) white else black
+
+    // Filter videos based on search query
+    val filteredVideos = remember(searchQuery) {
+        if (searchQuery.isEmpty()) {
+            myVideos
+        } else {
+            myVideos.filter { video ->
+                video.title.contains(searchQuery, ignoreCase = true) ||
+                        video.category.contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
+
+    // Group videos by category
+    val groupedVideos = remember(filteredVideos) {
+        filteredVideos.groupBy { it.category }
+    }
+
     BottomNavigationLayout {
         Box(
             Modifier
                 .fillMaxWidth()
                 .minHeight(100.vh)
-                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else white)
-                .color(if (colorMode == ColorMode.DARK) white else black)
+                .backgroundColor(primaryColor)
+                .color(textColor)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                PageHeader(
-                    "Naser's Codelab",
-                    "Sharing my journey and knowledge about Kotlin and Multiplatform Development",
-                    colorMode
-                )
-
-                VideoGrid(colorMode)
-            }
-        }
-    }
-}
-
-@Composable
-private fun VideoGrid(colorMode: ColorMode) {
-    var loadedVideos by remember { mutableStateOf(6) }
-    val videos = listOf(
-        Video("Title 1", "thumbnail1.jpg", "youtube_link_1"),
-        // Add more videos
-    )
-
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(24.px).gap(32.px),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        SimpleGrid(
-            modifier = Modifier.fillMaxWidth(),
-            numColumns = numColumns(base = 1, sm = 2, md = 3)
-        ) {
-            videos.take(loadedVideos).forEach { video ->
-                VideoCard(video, colorMode)
-            }
-        }
-
-        if (loadedVideos < videos.size) {
-            Button(
-                attrs = Modifier
-                    .padding(16.px)
-                    .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(40, 40, 40) else Color.rgb(230, 230, 230))
-                    .color(if (colorMode == ColorMode.DARK) white else black)
-                    .border(0.px)
-                    .borderRadius(4.px)
-                    .cursor(Cursor.Pointer)
-                    .onClick { loadedVideos += 6 }
-                    .toAttrs()
-            ) { Text("Load More") }
-        }
-    }
-}
-
-@Composable
-private fun VideoCard(video: Video, colorMode: ColorMode) {
-    Box(
-        modifier = Modifier
-            .padding(16.px)
-            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(30, 30, 30) else Color.rgb(245, 245, 245))
-            .borderRadius(8.px)
-//            .transition(Transition.group {
-//                transform(300.ms)
-//            })
-//            .styleModifier {
-//                CssStyle {
-//                    hover {
-//                        Modifier.transform { scale(1.05) }
-//                    }
-//                }
-//            }
-    ) {
-        Column(modifier = Modifier.gap(16.px)) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16.0/9.0)
-                    .backgroundColor(Color.rgb(20, 20, 20))
-                    .borderRadius(8.px)
-                    .overflow(Overflow.Hidden)
-            ) {
-                Image(
-                    src = video.thumbnail,
-                    modifier = Modifier.fillMaxSize().objectFit(ObjectFit.Cover)
-                )
-
-                // Play button overlay
+                // Header with Theme Toggle
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .backgroundColor(Color.rgba(0f, 0f, 0f, 0.5f))
-                        .opacity(0)
-                        .transition(Transition.of("opacity",300.ms))
-//                        .styleModifier {
-//                            CssStyle {
-//                                hover {
-//                                    Modifier.opacity(100)
-//                                }
-//                            }
-//                        }
-                    ,
-                    contentAlignment = Alignment.Center
+                    Modifier
+                        .fillMaxWidth()
+                        .backgroundColor(secondaryColor)
+                        .padding(16.px)
                 ) {
-                    // Play icon
-                    Div(
-                        attrs = Modifier
-                            .size(48.px)
-                            .borderRadius(50.percent)
-                            .backgroundColor(Color.rgb(255, 0, 0))
-                            .toAttrs()
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        PageHeader(
+                            "Naser's Codelab",
+                            "Sharing my journey and knowledge about Kotlin and Multiplatform Development",
+                            colorMode
+                        )
+                    }
+                }
+
+                // Search Bar
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.px)
+                ) {
+                    Input(
+                        attrs = {
+                            style {
+                                width(100.percent)
+                                padding(12.px)
+                                fontSize(16.px)
+                                borderRadius(8.px)
+                                border(1.px, LineStyle.Solid, if (colorMode == ColorMode.DARK) Color.rgb(50, 50, 50) else Color.rgb(200, 200, 200))
+                                backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(30, 30, 30) else white)
+                                color(textColor)
+                            }
+                            placeholder("Search videos by title or category...")
+                            onInput { event ->
+                                searchQuery = event.target.value
+                            }
+                        },
+                        type = InputType.Text
                     )
                 }
+
+                // Video Grid by Category
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.px)
+                        .gap(32.px)
+                ) {
+                    groupedVideos.forEach { (category, videos) ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .margin(bottom = 32.px)
+                        ) {
+                            // Category Header
+                            H2(
+                                attrs = {
+                                    style {
+                                        color(textColor)
+                                        marginBottom(16.px)
+                                    }
+                                }
+                            ) {
+                                Text(category)
+                            }
+
+                            // Videos in category
+                            SimpleGrid(
+                                modifier = Modifier.fillMaxWidth(),
+                                numColumns = numColumns(base = 1, sm = 2, md = 3, lg = 4)
+                            ) {
+                                videos.forEach { video ->
+                                    VideoCard(video, secondaryColor, accentColor, textColor, colorMode)
+                                }
+                            }
+                        }
+                    }
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun VideoCard(
+    video: VideoItem,
+    backgroundColor: Color,
+    accentColor: Color,
+    textColor: CSSColorValue,
+    colorMode: ColorMode
+) {
+    Box(
+        modifier = Modifier
+            .margin(8.px)
+            .padding(16.px)
+            .backgroundColor(backgroundColor)
+            .borderRadius(8.px)
+            .transition(Transition.of("transform", 300.ms))
+            .animation(Animation.of("translate",1000.ms))
+    ) {
+        Column {
+            VideoPlay(
+                videoId = video.srcId,
+                fullVideoUrl = video.fullSrcUrl,
+                width = video.width,
+                height = video.height
+            )
 
             H3(
-                attrs = Modifier
-                    .fontSize(18.px)
-                    .margin(0.px)
-                    .padding(16.px)
-                    .toAttrs()
-            ) { Text(video.title) }
+                attrs = {
+                    style {
+                        color(textColor)
+                        marginTop(8.px)
+                        marginBottom(4.px)
+                    }
+                }
+            ) {
+                Text(video.title)
+            }
 
-            A(
-                href = video.youtubeLink,
-                attrs = Modifier
-                    .fillMaxWidth()
-                    .padding(16.px)
-                    .backgroundColor(Color.rgb(255, 0, 0))
-                    .color(white)
-                    .textAlign(TextAlign.Center)
-                    .textDecorationLine(TextDecorationLine.None)
-                    .borderRadius(4.px)
-                    .toAttrs()
-            ) { Text("Watch Now") }
+            Span(
+                attrs = {
+                    style {
+                        color(if (colorMode == ColorMode.DARK) Color.rgb(170, 170, 170) else Color.rgb(100, 100, 100))
+                        fontSize(14.px)
+                    }
+                }
+            ) {
+                Text(video.category)
+            }
         }
+    }
+}
+
+
+@Composable
+fun VideoPlay(
+    videoId: String = "RJhR9oPOrj0",
+    fullVideoUrl:String?=null,
+    width:String?=null,
+    height: String?=null
+) {
+    Box(
+        modifier = Modifier
+            .margin(top = 20.px)
+            .margin(bottom = 20.px)
+            .maxWidth(800.px)
+            .padding(10.px)
+            .borderRadius(8.px)
+            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 8.px, color = rgba(0, 0, 0, 0.1))
+    ) {
+        Iframe(
+            attrs = {
+                attr("src",fullVideoUrl?:"https://www.youtube-nocookie.com/embed/$videoId")
+                width?.let { attr("width", it) }
+                height?.let { attr("height", it) }
+                attr("title", "YouTube video player")
+                attr("frameborder", "0")
+                attr("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share")
+                attr("allowfullscreen", "true")
+                attr("referrerpolicy", "strict-origin-when-cross-origin")
+                style {
+                    property("aspect-ratio", "16/9")
+                }
+            }
+        )
     }
 }

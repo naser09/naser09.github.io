@@ -9,153 +9,273 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.style.*
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.css.keywords.auto
 import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
-import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import naser09.github.io.components.BottomNavigationLayout
 import naser09.github.io.components.PageHeader
-import org.jetbrains.compose.web.css.Color.white
-import org.jetbrains.compose.web.css.Color.black
+import org.jetbrains.compose.web.attributes.ATarget
+import org.jetbrains.compose.web.attributes.target
 
-private data class Milestone(
-    val year: String,
-    val description: String
+private data class Academic(
+    val years: String,
+    val name: String,
+    val institute: String,
+    val instituteLocation: String,
+    val subjects: List<String>,
+    val cgpa: String,
+    val description: String,
+    val roleNumber: String,
+    val verifyResultLink: String
 )
 
-// Academic Page
 @Page("/academic")
 @Composable
 fun AcademicPage() {
-    var colorMode by remember { mutableStateOf(ColorMode.DARK) }
+    val colorMode by ColorMode.currentState
+    val breakpoint = rememberBreakpoint()
+
+    val academics = remember {
+        listOf(
+            Academic(
+                years = "2018-2021",
+                name = "Diploma in Computer Technology",
+                institute = "Cumilla Polytechnic Institute",
+                instituteLocation = "Cumilla, Bangladesh",
+                subjects = listOf("Programming", "Database Management", "Web Development", "Computer Networks"),
+                cgpa = "3.56 out of 4.0",
+                description = "Specialized in software development with focus on modern programming languages and web technologies.",
+                roleNumber = "role: 937535 year: 2021 Exam-Type: Diploma in Engineering",
+                verifyResultLink = "http://180.211.162.102:8444/result_arch/"
+            ),
+            Academic(
+                years = "2017-2018",
+                name = "Higher Secondary Certificate/HSC/Alim",
+                institute = "Sadipur Islamia Senior Alim Madrasah",
+                instituteLocation = "Sonargoan,Narayanganj,Dhaka",
+                subjects = listOf("Arabic", "Bangla", "History", "Mathematics","General Study"),
+                cgpa = "4.65 out of 5.0",
+                description = "Completed HSC with distinction in Science group, focusing on computer science and mathematics.",
+                roleNumber = "HSC14-456",
+                verifyResultLink = "http://www.educationboardresults.gov.bd"
+            ),
+            Academic(
+                years = "2015-2016",
+                name = "SSC/Dhakil Examination",
+                institute = "Sadipur Islamia Senior Alim Madrasah",
+                instituteLocation = "Sonargoan,Narayanganj,Dhaka",
+                subjects = listOf("Arabic", "Bangla", "History", "Mathematics","General Study"),
+                cgpa = "4.45 out of 5.0",
+                description = "Completed Dhakil Examination in 2015-16 sessions .",
+                roleNumber = "role:104025",
+                verifyResultLink = "http://www.educationboardresults.gov.bd"
+            )
+        )
+    }
 
     BottomNavigationLayout {
         Box(
             Modifier
                 .fillMaxWidth()
                 .minHeight(100.vh)
-                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else white)
-                .color(if (colorMode == ColorMode.DARK) white else black)
+                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else Color.rgb(250, 250, 250))
+                .color(if (colorMode == ColorMode.DARK) Color.rgb(240, 240, 240) else Color.rgb(33, 33, 33))
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PageHeader(
-                    "Academic Background",
-                    "Learning experiences that shaped my journey",
+                    "Academic Journey",
+                    "A timeline of my educational achievements and experiences",
                     colorMode
                 )
 
-                AcademicContent(colorMode)
+                AcademicContent(academics, colorMode, breakpoint)
             }
         }
     }
 }
 
 @Composable
-private fun AcademicContent(colorMode: ColorMode) {
+private fun AcademicContent(
+    academics: List<Academic>,
+    colorMode: ColorMode,
+    breakpoint: Breakpoint
+) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(if (breakpoint >= Breakpoint.MD) 80.percent else 95.percent)
+            .maxWidth(1000.px)
             .padding(24.px)
-            .maxWidth(800.px)
-//            .margin(topBottom = 0.px, leftRight = auto)
-            .gap(48.px)
+            .gap(32.px)
     ) {
-        // Diploma Card
+        // Summary Section
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.px)
                 .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(30, 30, 30) else Color.rgb(245, 245, 245))
-                .borderRadius(8.px)
+                .borderRadius(12.px)
+//                .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.2)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
         ) {
             Column(modifier = Modifier.gap(16.px)) {
-                H3(
+                H2(
                     attrs = Modifier
-                        .fontSize(24.px)
+                        .fontSize(if (breakpoint >= Breakpoint.MD) 32.px else 24.px)
                         .margin(0.px)
+                        .fontWeight(700)
                         .toAttrs()
-                ) { Text("Diploma in Computer Technology") }
+                ) { Text("Educational Background") }
 
-                P(attrs = Modifier.margin(0.px).toAttrs()) {
-                    Text("Completed with distinction, focusing on software development and computer systems.")
+                P(
+                    attrs = Modifier
+                        .margin(0.px)
+                        .fontSize(if (breakpoint >= Breakpoint.MD) 18.px else 16.px)
+                        .lineHeight(1.6)
+                        .opacity(0.9)
+                        .toAttrs()
+                ) {
+                    Text("My academic journey reflects a strong foundation in technology and continuous learning.")
                 }
             }
         }
 
         // Academic Timeline
-        Column(modifier = Modifier.gap(24.px)) {
-            H3(
-                attrs = Modifier
-                    .fontSize(24.px)
-                    .margin(0.px)
-                    .toAttrs()
-            ) { Text("Academic Timeline") }
-
-            AcademicTimeline(colorMode)
+        Column(modifier = Modifier.gap(32.px)) {
+            academics.forEach { academic ->
+                AcademicCard(academic, colorMode, breakpoint)
+            }
         }
     }
 }
 
 @Composable
-private fun AcademicTimeline(colorMode: ColorMode) {
-    val milestones = listOf(
-        Milestone("2017", "Started Computer Technology Diploma"),
-        Milestone("2018", "Completed Foundation Courses"),
-        Milestone("2019", "Specialized in Software Development"),
-        Milestone("2020", "Graduated with Distinction")
-    )
-
-    Column(modifier = Modifier.gap(24.px)) {
-        milestones.forEach { milestone ->
-            TimelineItem(milestone, colorMode)
-        }
-    }
-}
-
-@Composable
-private fun TimelineItem(milestone: Milestone, colorMode: ColorMode) {
-    Row(
-        modifier = Modifier.gap(16.px),
-        verticalAlignment = Alignment.CenterVertically
+private fun AcademicCard(
+    academic: Academic,
+    colorMode: ColorMode,
+    breakpoint: Breakpoint
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.px)
+            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(35, 35, 35) else Color.rgb(255, 255, 255))
+            .borderRadius(16.px)
+//            .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.2)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
+            .transition(Transition.of("transform", 300.ms))
+            .styleModifier {
+                property("hover", "transform: translateY(-5px)")
+            }
     ) {
-        // Timeline dot and line
-        Box(
-            modifier = Modifier
-                .size(16.px)
-                .borderRadius(50.percent)
-                .backgroundColor(if (colorMode == ColorMode.DARK) white else black)
-        )
+        Column(modifier = Modifier.gap(16.px)) {
+            // Header Section
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    H3(
+                        attrs = Modifier
+                            .fontSize(if (breakpoint >= Breakpoint.MD) 24.px else 20.px)
+                            .margin(0.px)
+                            .fontWeight(700)
+                            .color(if (colorMode == ColorMode.DARK) Color.rgb(129, 140, 248) else Color.rgb(79, 70, 229))
+                            .toAttrs()
+                    ) { Text(academic.name) }
 
-        // Content
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.px)
-                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(40, 40, 40) else Color.rgb(235, 235, 235))
-                .borderRadius(8.px)
-        ) {
-            Column(modifier = Modifier.gap(8.px)) {
-                H4(
-                    attrs = Modifier
-                        .fontSize(18.px)
-                        .margin(0.px)
-                        .toAttrs()
-                ) { Text(milestone.year) }
+                    Span(
+                        attrs = Modifier
+                            .fontSize(14.px)
+                            .opacity(0.8)
+                            .toAttrs()
+                    ) { Text(academic.years) }
+                }
 
-                P(
-                    attrs = Modifier
-                        .margin(0.px)
-                        .toAttrs()
-                ) { Text(milestone.description) }
+                Box(
+                    modifier = Modifier
+                        .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(45, 45, 45) else Color.rgb(243, 244, 246))
+                        .padding(8.px, 16.px)
+                        .borderRadius(20.px)
+                ) {
+                    Text(academic.cgpa)
+                }
+            }
+
+            // Institute Info
+            P(
+                attrs = Modifier
+                    .margin(0.px)
+                    .fontSize(18.px)
+                    .fontWeight(500)
+                    .toAttrs()
+            ) {
+                Text("${academic.institute}, ${academic.instituteLocation}")
+            }
+
+            // Description
+            P(
+                attrs = Modifier
+                    .margin(0.px)
+                    .fontSize(16.px)
+                    .lineHeight(1.6)
+                    .opacity(0.9)
+                    .toAttrs()
+            ) {
+                Text(academic.description)
+            }
+
+            // Subjects
+            if (breakpoint >= Breakpoint.MD) {
+                SimpleGrid(
+                    modifier = Modifier.fillMaxWidth().gap(8.px),
+                    numColumns = numColumns(base = 2, md = 3)
+                ) {
+                    academic.subjects.forEach { subject ->
+                        Box(
+                            modifier = Modifier
+                                .padding(8.px, 12.px)
+                                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(45, 45, 45) else Color.rgb(243, 244, 246))
+                                .borderRadius(8.px)
+                        ) {
+                            Text(subject)
+                        }
+                    }
+                }
+            } else {
+                Column(modifier = Modifier.gap(8.px)) {
+                    academic.subjects.forEach { subject ->
+                        Box(
+                            modifier = Modifier
+                                .padding(8.px, 12.px)
+                                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(45, 45, 45) else Color.rgb(243, 244, 246))
+                                .borderRadius(8.px)
+                        ) {
+                            Text(subject)
+                        }
+                    }
+                }
+            }
+
+            // Verification Link
+            A(
+                href = academic.verifyResultLink,
+                attrs = Modifier
+                    .fontSize(14.px)
+                    .color(if (colorMode == ColorMode.DARK) Color.rgb(129, 140, 248) else Color.rgb(79, 70, 229))
+                    .textDecorationLine(TextDecorationLine.None)
+                    .toAttrs {
+                        target(ATarget.Blank)
+                    }
+            ) {
+                Text("Verify Result (Roll: ${academic.roleNumber})")
             }
         }
     }

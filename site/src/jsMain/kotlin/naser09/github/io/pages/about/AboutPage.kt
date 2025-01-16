@@ -12,122 +12,311 @@ import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.style.*
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.css.keywords.auto
 import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
-import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import naser09.github.io.components.BottomNavigationLayout
 import naser09.github.io.components.PageHeader
-import org.jetbrains.compose.web.css.Color.white
-import org.jetbrains.compose.web.css.Color.black
 
-// About Page
+private data class PersonalInfo(
+    val label: String,
+    val value: String
+)
+
+private data class Skill(
+    val name: String,
+    val proficiency: Int, // 0-100
+    val description: String
+)
+
 @Page("/about")
 @Composable
 fun AboutPage() {
-    var colorMode by remember { mutableStateOf(ColorMode.DARK) }
+    val colorMode by ColorMode.currentState
+    val breakpoint = rememberBreakpoint()
+
+    val personalInfo = remember {
+        listOf(
+            PersonalInfo("Name", "Abu Naser"),
+            PersonalInfo("Location", "1440,Sonargoan,Narayanganj,Dhaka"),
+            PersonalInfo("Email", "naser09@gmail.com"),
+            PersonalInfo("Languages", "English, Bengali"),
+            PersonalInfo("Experience", "5+ years in Kotlin Development (self-taught)")
+        )
+    }
+
+    val skills = remember {
+        listOf(
+            Skill("Kotlin", 90, "Expert in Kotlin development with focus on multiplatform projects"),
+            Skill("Android", 90, "Professional Android app development experience"),
+            Skill("Compose", 80, "Strong expertise in Jetpack Compose and Compose Multiplatform"),
+            Skill("Web Development", 75, "Full-stack development using Kotlin/JS and KobWeb")
+        )
+    }
+
     BottomNavigationLayout {
         Box(
             Modifier
                 .fillMaxWidth()
                 .minHeight(100.vh)
-                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else white)
-                .color(if (colorMode == ColorMode.DARK) white else black)
+                .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else Color.rgb(250, 250, 250))
+                .color(if (colorMode == ColorMode.DARK) Color.rgb(240, 240, 240) else Color.rgb(33, 33, 33))
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PageHeader(
                     "About Me",
-                    "Get to know the person behind the code",
+                    "Passionate Kotlin developer building cross-platform solutions",
                     colorMode
                 )
 
-                AboutContent(colorMode)
+                AboutContent(colorMode, breakpoint, personalInfo, skills)
             }
         }
     }
 }
 
 @Composable
-private fun AboutContent(colorMode: ColorMode) {
-    Row(
+private fun AboutContent(
+    colorMode: ColorMode,
+    breakpoint: Breakpoint,
+    personalInfo: List<PersonalInfo>,
+    skills: List<Skill>
+) {
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(if (breakpoint >= Breakpoint.MD) 80.percent else 95.percent)
+            .maxWidth(1200.px)
             .padding(24.px)
-            .gap(32.px),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Top
+            .gap(48.px)
     ) {
-        // Profile photo
-        Box(
-            modifier = Modifier
-                .size(300.px)
-                .borderRadius(8.px)
-                .overflow(Overflow.Hidden)
-        ) {
-            Image(
-                src = "/profile.jpg",
-                modifier = Modifier.fillMaxSize().objectFit(ObjectFit.Cover)
-            )
-        }
-
-        // Details
-        Column(
-            modifier = Modifier.maxWidth(600.px).gap(24.px)
-        ) {
-            DetailCard("Personal Information", colorMode) {
-                P { Text("Name: Abu Naser") }
-                P { Text("Birthdate: January 1, 1999") }
+        // Profile Section
+        if (breakpoint >= Breakpoint.MD) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gap(48.px),
+                verticalAlignment = Alignment.Top
+            ) {
+                ProfileImage(colorMode)
+                ProfileInfo(colorMode, personalInfo)
             }
-
-            DetailCard("Hobbies & Interests", colorMode) {
-                listOf(
-                    "Coding and experimenting with new technologies",
-                    "Reading technical documentation",
-                    "Learning new tech stacks",
-                    "Creating educational content for YouTube"
-                ).forEach { hobby ->
-                    P { Text("• $hobby") }
-                }
-            }
-
-            DetailCard("Vision", colorMode) {
-                P {
-                    Text(
-                        "As a Kotlin developer, I aim to push the boundaries of cross-platform development " +
-                                "while sharing knowledge and helping others grow in their development journey."
-                    )
-                }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gap(32.px),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ProfileImage(colorMode)
+                ProfileInfo(colorMode, personalInfo)
             }
         }
+
+        // Skills Section
+        SkillsSection(colorMode, breakpoint, skills)
+
+        // Vision Section
+        VisionSection(colorMode)
     }
 }
 
-
-// Helper Components
 @Composable
-private fun DetailCard(title: String, colorMode: ColorMode, content: @Composable () -> Unit) {
+private fun ProfileImage(colorMode: ColorMode) {
+    Box(
+        modifier = Modifier
+            .size(300.px)
+            .borderRadius(16.px)
+            .overflow(Overflow.Hidden)
+
+           // .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.3)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
+    ) {
+        Image(
+            src = "/profile.jpg",
+            modifier = Modifier
+                .fillMaxSize()
+                .objectFit(ObjectFit.Cover)
+                .transition(Transition.of("transform", 300.ms))
+                .styleModifier {
+                    property("hover", "transform: scale(1.05)")
+                }
+        )
+    }
+}
+
+@Composable
+private fun ProfileInfo(colorMode: ColorMode, personalInfo: List<PersonalInfo>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(24.px)
-            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(30, 30, 30) else Color.rgb(245, 245, 245))
-            .borderRadius(8.px)
+            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(30, 30, 30) else Color.rgb(255, 255, 255))
+            .borderRadius(16.px)
+           // .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.2)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
     ) {
-        Column(modifier = Modifier.gap(16.px)) {
+        Column(modifier = Modifier.gap(24.px)) {
+            H2(
+                attrs = Modifier
+                    .margin(0.px)
+                    .fontSize(28.px)
+                    .fontWeight(700)
+                    .color(if (colorMode == ColorMode.DARK) Color.rgb(129, 140, 248) else Color.rgb(79, 70, 229))
+                    .toAttrs()
+            ) {
+                Text("Personal Information")
+            }
+
+            personalInfo.forEach { info ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.px)
+                        .gap(16.px)
+                ) {
+                    Span(
+                        attrs = Modifier
+                            .minWidth(100.px)
+                            .fontWeight(600)
+                            .opacity(0.8)
+                            .toAttrs()
+                    ) { Text(info.label) }
+                    Span { Text(info.value) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SkillsSection(colorMode: ColorMode, breakpoint: Breakpoint, skills: List<Skill>) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.px)
+            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(30, 30, 30) else Color.rgb(255, 255, 255))
+            .borderRadius(16.px)
+         //   .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.2)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
+    ) {
+        Column(modifier = Modifier.gap(24.px)) {
+            H2(
+                attrs = Modifier
+                    .margin(0.px)
+                    .fontSize(28.px)
+                    .fontWeight(700)
+                    .color(if (colorMode == ColorMode.DARK) Color.rgb(129, 140, 248) else Color.rgb(79, 70, 229))
+                    .toAttrs()
+            ) {
+                Text("Technical Skills")
+            }
+
+            SimpleGrid(
+                modifier = Modifier.fillMaxWidth(),
+                numColumns = numColumns(base = 1, md = 2)
+            ) {
+                skills.forEach { skill ->
+                    SkillCard(skill, colorMode)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SkillCard(skill: Skill, colorMode: ColorMode) {
+    Box(
+        modifier = Modifier
+            .padding(16.px)
+            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(40, 40, 40) else Color.rgb(245, 245, 245))
+            .borderRadius(12.px)
+            .transition(Transition.of("transform", 300.ms))
+            .styleModifier {
+                property("hover", "transform: translateY(-5px)")
+            }
+    ) {
+        Column(modifier = Modifier.padding(16.px).gap(12.px)) {
             H3(
                 attrs = Modifier
-                    .fontSize(24.px)
                     .margin(0.px)
+                    .fontSize(20.px)
+                    .fontWeight(600)
                     .toAttrs()
-            ) { Text(title) }
+            ) {
+                Text(skill.name)
+            }
 
-            content()
+            // Progress bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.px)
+                    .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(60, 60, 60) else Color.rgb(220, 220, 220))
+                    .borderRadius(4.px)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(skill.proficiency.percent)
+                        .height(8.px)
+                        .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(129, 140, 248) else Color.rgb(79, 70, 229))
+                        .borderRadius(4.px)
+                )
+            }
+
+            P(
+                attrs = Modifier
+                    .margin(0.px)
+                    .fontSize(14.px)
+                    .opacity(0.8)
+                    .toAttrs()
+            ) {
+                Text(skill.description)
+            }
+        }
+    }
+}
+
+@Composable
+private fun VisionSection(colorMode: ColorMode) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.px)
+            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(30, 30, 30) else Color.rgb(255, 255, 255))
+            .borderRadius(16.px)
+           // .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.2)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
+    ) {
+        Column(modifier = Modifier.gap(24.px)) {
+            H2(
+                attrs = Modifier
+                    .margin(0.px)
+                    .fontSize(28.px)
+                    .fontWeight(700)
+                    .color(if (colorMode == ColorMode.DARK) Color.rgb(129, 140, 248) else Color.rgb(79, 70, 229))
+                    .toAttrs()
+            ) {
+                Text("Vision & Goals")
+            }
+
+            P(
+                attrs = Modifier
+                    .margin(0.px)
+                    .fontSize(16.px)
+                    .lineHeight(1.6)
+                    .opacity(0.9)
+                    .toAttrs()
+            ) {
+                Text(
+                    "As a passionate Kotlin developer, I am dedicated to pushing the boundaries of cross-platform development. " +
+                            "My goal is to create efficient, maintainable, and user-friendly applications while contributing to the developer community " +
+                            "through knowledge sharing and open-source contributions. I believe in continuous learning and staying updated with " +
+                            "the latest technologies to deliver innovative solutions."
+                )
+            }
         }
     }
 }

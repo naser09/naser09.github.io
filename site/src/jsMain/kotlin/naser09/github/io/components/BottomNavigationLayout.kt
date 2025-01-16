@@ -168,7 +168,10 @@ fun BottomNavigationLayout(
 
         // Navigation container with backdrop blur
             Row(
-                modifier = BottomNavBackDropStyle.toModifier().justifySelf(JustifySelf.Center),
+                modifier = BottomNavBackDropStyle.
+                toModifier()
+                    .id("bottom_nav")
+                    .justifySelf(JustifySelf.Center),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
