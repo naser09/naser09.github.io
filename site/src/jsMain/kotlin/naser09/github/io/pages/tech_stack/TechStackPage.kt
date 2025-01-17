@@ -501,7 +501,7 @@ private fun TechCard(
                     .justifyContent(com.varabyte.kobweb.compose.css.JustifyContent.Center)
             ) {
                 if (tech.fontAwesomeIcon!=null){
-                    tech.fontAwesomeIcon.invoke(if (breakpoint>Breakpoint.MD) IconSize.LG else IconSize.SM)
+                    tech.fontAwesomeIcon.invoke(if (breakpoint>Breakpoint.MD) IconSize.XL else IconSize.LG)
                 }else{
                     Image(
                         src = tech.iconPath ?: "/icons/${tech.name.lowercase()}.svg",
