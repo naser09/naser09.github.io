@@ -113,7 +113,7 @@ private val technologies = listOf(
         TechCategory.MOBILE,
         "Modern Android UI development with declarative paradigm. Built multiple production apps.",
         3.0f,
-        iconPath = "icons/compose.png"
+        iconPath = "icons/compose.webp"
     ),
     Technology(
         "Swift UI",
@@ -315,8 +315,7 @@ private fun TechStackContent(colorMode: ColorMode, breakpoint: Breakpoint) {
             onCategorySelected = { selectedCategory = it },
             selectedProficiency = selectedProficiency,
             onProficiencySelected = { selectedProficiency = it },
-            colorMode = colorMode,
-            breakpoint = breakpoint
+            colorMode = colorMode
         )
         HorizontalDivider(Modifier.fillMaxWidth().height(1.vh))
         // Tech Grid
@@ -339,8 +338,7 @@ private fun Filters(
     onCategorySelected: (TechCategory?) -> Unit,
     selectedProficiency: Proficiency?,
     onProficiencySelected: (Proficiency?) -> Unit,
-    colorMode: ColorMode,
-    breakpoint: Breakpoint
+    colorMode: ColorMode
 ) {
     Column(
         modifier = Modifier.gap(16.px)
@@ -412,34 +410,6 @@ private fun Filters(
         }
     }
 }
-
-
-@Composable
-private fun StatItem(label: String, value: String, colorMode: ColorMode) {
-    Column(
-        modifier = Modifier.padding(16.px),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Span(
-            attrs = Modifier
-                .fontSize(24.px)
-                .fontWeight(FontWeight.Bold)
-                .color(if (colorMode == ColorMode.DARK) white else black)
-                .toAttrs()
-        ) {
-            Text(value)
-        }
-        Span(
-            attrs = Modifier
-                .fontSize(14.px)
-                .color(if (colorMode == ColorMode.DARK) Color.rgb(200, 200, 200) else Color.rgb(100, 100, 100))
-                .toAttrs()
-        ) {
-            Text(label)
-        }
-    }
-}
-
 
 @Composable
 private fun FilterButton(

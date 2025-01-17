@@ -51,7 +51,7 @@ import org.jetbrains.compose.web.dom.*
                 .overflow(Overflow.Hidden)
         ) {
             Image(
-                src = "icons/profile.png",
+                src = "icons/profile.webp",
                 modifier = Modifier
                     .backgroundColor(BackgroundColor.Transparent)
                     .fillMaxSize()

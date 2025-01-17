@@ -18,7 +18,6 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
-import com.varabyte.kobweb.silk.components.icons.fa.FaPerson
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import naser09.github.io.components.BottomNavigationLayout
 import naser09.github.io.components.PageHeader
@@ -66,6 +65,7 @@ fun AboutPage() {
                 .minHeight(100.vh)
                 .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else Color.rgb(250, 250, 250))
                 .color(if (colorMode == ColorMode.DARK) Color.rgb(240, 240, 240) else Color.rgb(33, 33, 33))
+                .margin(bottom = 13.vh)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -107,7 +107,7 @@ private fun AboutContent(
                     .gap(48.px),
                 verticalAlignment = Alignment.Top
             ) {
-                ProfileImage(colorMode)
+                ProfileImage()
                 ProfileInfo(colorMode, personalInfo)
             }
         } else {
@@ -117,7 +117,7 @@ private fun AboutContent(
                     .gap(32.px),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ProfileImage(colorMode)
+                ProfileImage()
                 ProfileInfo(colorMode, personalInfo)
             }
         }
@@ -131,7 +131,7 @@ private fun AboutContent(
 }
 
 @Composable
-private fun ProfileImage(colorMode: ColorMode) {
+private fun ProfileImage() {
     Box(
         modifier = Modifier
             .size(300.px)
@@ -142,7 +142,7 @@ private fun ProfileImage(colorMode: ColorMode) {
            // .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.3)" else "0 4px 6px rgba(0, 0, 0, 0.1)")
     ) {
         Image(
-            src = "icons/profile.png",
+            src = "icons/profile.webp",
             modifier = Modifier
                 .fillMaxSize()
                 .objectFit(ObjectFit.Contain)

@@ -1,10 +1,14 @@
 package naser09.github.io.components.home_page_components
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.Transition
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.functions.blur
-import com.varabyte.kobweb.compose.foundation.layout.*
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
@@ -16,7 +20,7 @@ import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.css.AlignItems
+import org.jetbrains.compose.web.css.keywords.auto
 import org.jetbrains.compose.web.dom.*
 
 data class TimelineItem(
@@ -98,11 +102,12 @@ val YearStyle = CssStyle{
 
 @Composable
 fun TimelineSection(colorMode: ColorMode) {
-    val timelineItems = listOf(
+    val timelineItems by lazy { listOf(
         TimelineItem(
-            year = "2017",
+            year = "2017-18",
             title = "Android Development Journey Begins",
-            description = "Started my journey in Android development with Java, learning core concepts and building basic applications. Focused on understanding Android lifecycle, UI development with XML layouts, and fundamental programming concepts.",
+            description = "Started my journey in Android development with Java," +
+                    " learning core concepts and building basic applications. Focused on understanding Android lifecycle, UI development with XML layouts, and fundamental programming concepts.",
             technologies = listOf(
                 "Java SE 8",
                 "Android SDK",
@@ -117,7 +122,7 @@ fun TimelineSection(colorMode: ColorMode) {
             )
         ),
         TimelineItem(
-            year = "2019",
+            year = "2019-20",
             title = "Kotlin Migration & Modern Android",
             description = "Transitioned to Kotlin for Android development, embracing modern Android development practices. Implemented MVVM architecture, Coroutines for async programming, and adopted Android Jetpack components.",
             technologies = listOf(
@@ -136,7 +141,7 @@ fun TimelineSection(colorMode: ColorMode) {
             )
         ),
         TimelineItem(
-            year = "2020",
+            year = "2021-22",
             title = "Jetpack Compose Revolution",
             description = "Embraced declarative UI with Jetpack Compose, revolutionizing Android UI development. Focused on building modern, reactive applications with improved user experiences and maintainable codebases.",
             technologies = listOf(
@@ -155,7 +160,7 @@ fun TimelineSection(colorMode: ColorMode) {
             )
         ),
         TimelineItem(
-            year = "2021",
+            year = "2022-23",
             title = "Multiplatform & Content Creation",
             description = "Expanded horizons with Kotlin Multiplatform development and started sharing knowledge through YouTube content creation. Focused on building shared codebases for multiple platforms.",
             technologies = listOf(
@@ -173,7 +178,7 @@ fun TimelineSection(colorMode: ColorMode) {
             )
         ),
         TimelineItem(
-            year = "2022-Present",
+            year = "2023-Present",
             title = "Full-Stack Development",
             description = "Ventured into backend development with Ktor and modern web technologies. Built comprehensive full-stack applications with focus on scalability and performance.",
             technologies = listOf(
@@ -192,18 +197,16 @@ fun TimelineSection(colorMode: ColorMode) {
                 "Implemented CI/CD pipelines"
             )
         )
-    )
+    ) }
 
     Box(
         modifier = Modifier
             .width(92.vw)
-            .overflow(Overflow.Auto)
-            .scrollBehavior(ScrollBehavior.Smooth)
     ) {
         Column(
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
+            verticalArrangement = Arrangement.spacedBy(5.vh)
         ) {
             timelineItems.forEachIndexed { index, item ->
                 TimelineItemView(
@@ -216,6 +219,7 @@ fun TimelineSection(colorMode: ColorMode) {
     }
 }
 
+
 @Composable
 private fun TimelineItemView(
     item: TimelineItem,
@@ -224,13 +228,15 @@ private fun TimelineItemView(
 ) {
     val breakpoint = rememberBreakpoint()
     Box(
-        modifier = Modifier
-            .width(92.vw)
-            .height(100.vh)
-            .scrollSnapAlign(ScrollSnapAlign.Center)
-            .position(Position.Relative)
+        modifier = if (breakpoint>=Breakpoint.MD){
+            Modifier
+                .width(92.vw)
+                .height(100.vh)
+                .overflow { y(Overflow.Visible) }
+                .position(Position.Relative)
+                .margin(bottom = 10.vh)
+        }else Modifier
     ) {
-        // Timeline line
         if (breakpoint>=Breakpoint.MD){
             Box(
                 modifier = Modifier
@@ -274,28 +280,20 @@ private fun TimelineItemView(
                     .then(TimelineCardStyle.toModifier())
             }else{
                 Modifier
-                    .position(Position.Absolute)
-                    .width(90.percent)
-                    .left(50.percent)
-                    .top(50.percent)
-                    .transform { translateY((-50).percent) }
-                    .transform { translateX((-50).percent) }
-                    .padding(5.px)
+                    .padding(10.px)
                     .then(TimelineCardStyle.toModifier())
             }
         ) {
             Column(modifier = Modifier.gap(16.px)) {
                 if (breakpoint < Breakpoint.MD){
-                    Span(
-                        attrs = Modifier
-                            .padding(bottom = 15.px)
-                            .then(YearStyle.toModifier())
-                            .toAttrs()
-                    ) {
+                    H2(Modifier.margin { auto }
+                        .alignContent(com.varabyte.kobweb.compose.css.AlignContent.Center)
+                        .padding(4.px)
+                        .toAttrs()){
                         Text(item.year)
                     }
                 }
-                H2(attrs = Modifier
+                H3(attrs = Modifier
                     .margin(0.px)
                     .fontSize(24.px)
                     .fontWeight(FontWeight.Bold)

@@ -1,19 +1,17 @@
 package naser09.github.io.components.home_page_components
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.compose.ui.modifiers.background
-import com.varabyte.kobweb.compose.ui.modifiers.justifyContent
-import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import naser09.github.io.components.auto_typing_terminal.AutoTypingTerminal
-import naser09.github.io.components.neumorphism.NeumorphismButton
 import naser09.github.io.toSitePalette
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.AlignContent
@@ -39,47 +37,9 @@ fun TechStackButton(
     onClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
-    var isPressed by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier
-            .then(
-                Modifier
-                    .cursor(Cursor.Pointer)
-                    .borderRadius(16.px)
-                    .styleModifier {
-                        property("box-shadow", if (isPressed) {
-                            // Pressed state: inner shadow effect
-                            """
-                            inset 6px 6px 10px 0 rgba(0, 0, 0, 0.2),
-                            inset -6px -6px 10px 0 rgba(255, 255, 255, 0.5)
-                            """
-                        } else {
-                            // Default state: outer shadow effect
-                            """
-                            6px 6px 10px 0 rgba(0, 0, 0, 0.2),
-                            -6px -6px 10px 0 rgba(255, 255, 255, 0.5),
-                            inset 0 0 0 rgba(0, 0, 0, 0),
-                            inset 0 0 0 rgba(255, 255, 255, 0)
-                            """
-                        }.trimIndent())
-                        property("transition", "all 0.2s ease-in-out")
-                    }
-                    .padding(16.px)
-                    .onMouseDown { isPressed = true }
-                    .onMouseUp { isPressed = false }
-                    .onClick { onClick() }
-//                    .hover(
-//                        Modifier
-//                            .transform { transform("scale(1.05)") }
-//                            .styleModifier {
-//                                property("box-shadow", """
-//                                    8px 8px 12px 0 rgba(0, 0, 0, 0.15),
-//                                    -8px -8px 12px 0 rgba(255, 255, 255, 0.6)
-//                                """.trimIndent())
-//                            }
-//                    )
-            )
+            .onClick { onClick() }
     ) {
         content()
     }
@@ -96,19 +56,19 @@ fun TechStackSection() {
             stack = "Kotlin"
         ),
         TechStack(
-            icon = "/icons/compose.png",
+            icon = "/icons/compose.webp",
             width = 48.px,
             height = 48.px,
             stack = "Jetpack / Jetbrain's Compose"
         ),
         TechStack(
-            icon = "/icons/multiplatform.png",
+            icon = "/icons/multiplatform.webp",
             width = 96.px,
             height = 48.px,
             stack = "Kotlin Multiplatform"
         ),
         TechStack(
-            icon = "/icons/ktor.png",
+            icon = "/icons/ktor.webp",
             width = 48.px,
             height = 48.px,
             stack = "Ktor Server/Client"
@@ -196,7 +156,12 @@ fun TechStackSection() {
                 TechStackButton(
                     modifier = Modifier
                         .minWidth(item.width)
-                        .background(colorMode.toSitePalette().brand.secondary)
+                        .background(color = colorMode.toSitePalette().nearBackground)
+                        .padding(leftRight = 12.px, topBottom = 6.px)
+                        .borderRadius(10.percent)
+                        .boxShadow(BoxShadow.of(offsetX = 2.px, offsetY = 1.5.px,
+                            color = colorMode.toSitePalette().nearBackground.darkened(0.3f)))
+                        .then(TimelineCardStyle.toModifier())
 //                        .flexGrow(1)
 //                        .flexShrink(1)
 //                        .flexBasis(150.px)
@@ -224,7 +189,7 @@ fun TechStackSection() {
                                     .minHeight(item.height)
                                     .maxWidth(item.width*1.2)
                                     .maxHeight(item.height*1.2)
-                                    .mixBlendMode(MixBlendMode.Multiply)
+//                                    .mixBlendMode(MixBlendMode.Multiply)
                                     .objectFit(ObjectFit.Contain)
                             )
                         }

@@ -1,31 +1,36 @@
 package naser09.github.io.pages.projects
 
 import androidx.compose.runtime.*
-import com.varabyte.kobweb.compose.css.*
-import com.varabyte.kobweb.compose.foundation.layout.*
-import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.TextDecorationLine
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.style.*
-import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.css.keywords.auto
-import org.jetbrains.compose.web.dom.*
-import com.varabyte.kobweb.compose.ui.graphics.Color
-import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import kotlinx.coroutines.delay
 import naser09.github.io.components.BottomNavigationLayout
 import naser09.github.io.components.PageHeader
 import naser09.github.io.toSitePalette
-import org.jetbrains.compose.web.css.Color.white
+import org.jetbrains.compose.web.attributes.ATarget
+import org.jetbrains.compose.web.attributes.target
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.Color.black
+import org.jetbrains.compose.web.css.Color.white
+import org.jetbrains.compose.web.dom.*
 import kotlin.time.Duration.Companion.seconds
 
 private data class Project(
@@ -39,7 +44,7 @@ private data class Project(
 )
 
 private enum class ProjectType {
-    PRODUCTION, OPEN_SOURCE, PET_PROJECT, FREELANCE
+    PRODUCTION, OPEN_SOURCE, PET_PROJECT, FREELANCE , YOUTUBE ,IN_PROGRESS
 }
 
 val ProjectCardStyle = CssStyle {
@@ -97,83 +102,77 @@ fun ProjectsPage() {
 private fun ProjectsGrid(colorMode: ColorMode) {
     val projects = listOf(
         Project(
-            "KMPCommerce",
-            "A full-featured e-commerce application built with Kotlin Multiplatform. Supports iOS and Android with shared business logic, networking, and local storage.",
-            listOf("Kotlin Multiplatform", "Ktor", "SQLDelight", "Compose Multiplatform"),
-            ProjectType.PRODUCTION,
-            releaseLink = "https://play.google.com/store/apps/details?id=com.example.kmpcommerce",
-            githubLink = "https://github.com/example/kmpcommerce",
+            title = "Lineage note: Cherry tree notes",
+            description = "A note-taking app with a focus on streamlined navigation and modern design.",
+            technologies = listOf(
+                "androidx navigation", "jetpack compose", "admob", "Material 3",
+                "room database", "shared preference", "multi-module",
+                "scoped storage", "GSON", "MVVM architecture"
+            ),
+            type = ProjectType.PRODUCTION,
+            releaseLink = "https://play.google.com/store/apps/details?id=com.blogspot.lineagenote",
+            githubLink = null,
+            images = listOf()
+        ),
+        Project(
+            title = "PDF Tools: Web2PDF, Merge, Split",
+            description = "A comprehensive PDF utility app for creating and managing PDF files.",
+            technologies = listOf(
+                "androidx", "jetpack compose", "Material 3", "shared preference",
+                "multi-module", "MVVM architecture", "web view", "PDF Box"
+            ),
+            type = ProjectType.PRODUCTION,
+            releaseLink = "https://play.google.com/store/apps/details?id=com.blogspot.web2pdf",
+            githubLink = null,
+            images = listOf() // Add image URLs here if available
+        ),    Project(
+            title = "KMP Note Pad app with YouTube playlist",
+            description = "An Kotlin Multiplatform app with a complete development tutorial available on YouTube.",
+            technologies = listOf(
+                "kotlin", "swift", "xcode", "android studio", "kotlin multiplatform",
+                "sqlDelight", "decompose", "RxKotlin", "coroutine", "MviKotlin",
+                "swift UI", "multiplatform setting"
+            ),
+            type = ProjectType.YOUTUBE,
+            releaseLink = "https://www.youtube.com/playlist?list=PLXzlJ385171s7A9iEngwx3b2RlCRAbqqy",
+            githubLink = null,
+            images = listOf()
+        ),
+        Project(
+            "Ktor Backend Chat server for youtube video ,",
+            "A ktor backend server created to demonstrate how it work in my youtube video ,",
+            listOf("Kotlin", "Ktor", "SQLDelight", "kotlinX serialization","web socket"),
+            ProjectType.YOUTUBE,
+            releaseLink = "https://www.youtube.com/playlist?list=PLXzlJ385171vyDDz2eliB1CWp-FMFX06x",
+            githubLink = "https://github.com/naser09/chat_server_yt.git",
             images = listOf(
                 "projects/kmpcommerce1.png",
                 "projects/kmpcommerce2.png",
                 "projects/kmpcommerce3.png"
             )
         ),
-        // Add more projects with multiple images
         Project(
-            "Ktor Backend Template",
-            "Production-ready Ktor backend template with authentication, authorization, and database integration.",
+            "Kotlin multiplatform MCQ Apps",
+            "A kotlin multiplatform mcq app that uses ktor backend and authenticate users .",
             listOf("Ktor", "PostgreSQL", "Redis", "Docker"),
-            ProjectType.OPEN_SOURCE,
-            githubLink = "https://github.com/example/ktor-template",
+            ProjectType.PET_PROJECT,
+            githubLink = "https://github.com/naser09/MCQ_KMP.git",
             images = listOf(
                 "projects/ktor1.png",
                 "projects/ktor2.png"
             )
-        )
-        // Add more projects here
-        ,
-        Project(
-            "KMPCommerce",
-            "A full-featured e-commerce application built with Kotlin Multiplatform. Supports iOS and Android with shared business logic, networking, and local storage. Uses Ktor for the backend API.",
-            listOf("Kotlin Multiplatform", "Ktor", "SQLDelight", "Compose Multiplatform", "Swift UI"),
-            ProjectType.PRODUCTION,
-            releaseLink = "https://play.google.com/store/apps/details?id=com.example.kmpcommerce",
-            githubLink = "https://github.com/example/kmpcommerce",
-            images = listOf ( "projects/kmpcommerce.png")
         ),
         Project(
-            "Ktor Backend Template",
-            "Production-ready Ktor backend template with authentication, authorization, database integration, and deployment configurations. Features comprehensive testing and documentation.",
-            listOf("Ktor", "PostgreSQL", "Redis", "Docker", "GitHub Actions"),
-            ProjectType.OPEN_SOURCE,
-            githubLink = "https://github.com/example/ktor-template",
-            images = listOf ( "projects/ktor-template.png")
-        ),
-        Project(
-            "KotlinConf App",
-            "Official conference companion app built with Compose Multiplatform. Features schedule management, speaker profiles, and real-time updates.",
-            listOf("Kotlin", "Compose Multiplatform", "Ktor", "Firebase"),
-            ProjectType.PRODUCTION,
-            releaseLink = "https://play.google.com/store/apps/details?id=org.kotlinconf.app",
-            githubLink = "https://github.com/example/kotlinconf-app",
-            images = listOf ( "projects/kotlinconf.png")
-        ),
-        Project(
-            "KMP Analytics SDK",
-            "Cross-platform analytics SDK built with Kotlin Multiplatform. Provides seamless integration for iOS and Android apps with a single codebase.",
-            listOf("Kotlin Multiplatform", "Coroutines", "SQLDelight", "Kotlin Serialization"),
-            ProjectType.OPEN_SOURCE,
-            githubLink = "https://github.com/example/kmp-analytics",
-            images = listOf ( "projects/analytics-sdk.png")
-        ),
-        Project(
-            "Compose Design System",
-            "Comprehensive design system built with Compose Multiplatform, featuring 50+ reusable components, theming support, and documentation.",
-            listOf("Compose Multiplatform", "Kotlin", "Material Design"),
-            ProjectType.FREELANCE,
-            githubLink = "https://github.com/example/compose-design-system",
-            images = listOf("projects/design-system.png")
-        ),
-        Project(
-            "KMP Weather App",
-            "Weather application showcasing Kotlin Multiplatform capabilities with shared networking, caching, and business logic.",
-            listOf("Kotlin Multiplatform", "Ktor", "Kotlin Flow", "Compose Multiplatform"),
+            "Laravel 10 with multiple authentication & authorization .",
+            "A kotlin multiplatform mcq app that uses ktor backend and authenticate users .",
+            listOf("Laravel 10", "PostgreSQL", "Blade Template", "PHP" , "Tailwind Css" ,"npm"),
             ProjectType.PET_PROJECT,
-            releaseLink = "https://play.google.com/store/apps/details?id=com.example.kmpweather",
-            githubLink = "https://github.com/example/kmp-weather",
-            images = listOf("projects/weather-app.png")
-        )
+            githubLink = "https://github.com/naser09/laravel10_multi_auth.git",
+            images = listOf(
+                "projects/ktor1.png",
+                "projects/ktor2.png"
+            )
+        ),
     )
 
     Box(
@@ -339,7 +338,9 @@ private fun ProjectCard(project: Project, colorMode: ColorMode) {
                         attrs = Modifier
                             .textDecorationLine(TextDecorationLine.None)
                             .color(if (colorMode == ColorMode.DARK) white else black)
-                            .toAttrs()
+                            .toAttrs{
+                                target(ATarget.Blank)
+                            }
                     ) { Text("Download →") }
                 }
 
@@ -349,7 +350,9 @@ private fun ProjectCard(project: Project, colorMode: ColorMode) {
                         attrs = Modifier
                             .textDecorationLine(TextDecorationLine.None)
                             .color(if (colorMode == ColorMode.DARK) white else black)
-                            .toAttrs()
+                            .toAttrs{
+                                target(ATarget.Blank)
+                            }
                     ) { Text("GitHub →") }
                 }
             }
@@ -363,5 +366,7 @@ private fun getProjectTypeColor(type: ProjectType, colorMode: ColorMode): Color 
         ProjectType.OPEN_SOURCE -> if (colorMode == ColorMode.DARK) Color.rgb(100, 0, 100) else Color.rgb(255, 200, 255)
         ProjectType.PET_PROJECT -> if (colorMode == ColorMode.DARK) Color.rgb(0, 0, 100) else Color.rgb(200, 200, 255)
         ProjectType.FREELANCE -> if (colorMode == ColorMode.DARK) Color.rgb(100, 100, 0) else Color.rgb(255, 255, 200)
+        ProjectType.YOUTUBE -> if(colorMode == ColorMode.DARK) Color.rgb(150, 120, 0) else Color.rgb(205, 200, 200)
+        ProjectType.IN_PROGRESS -> if(colorMode == ColorMode.DARK) Color.rgb(120, 150, 0) else Color.rgb(230, 180, 200)
     }
 }

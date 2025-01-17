@@ -64,7 +64,7 @@ jobs:
           ls -la
           
           # Create commit
-          git commit -m "updated all pages except projects"
+          git commit -m "updated all pages v1."
           
           # Force push to main
           git push --force origin temp_branch:main
