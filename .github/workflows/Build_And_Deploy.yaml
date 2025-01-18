@@ -55,6 +55,28 @@ jobs:
           cp -r temp/resources/* .
           cp -r temp/pages .
           rm -rf temp
+          touch 404.html
+          echo '<!doctype html>
+              <html lang="en">
+              <head>
+              <meta charset="UTF-8">
+              <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+              <meta http-equiv="X-UA-Compatible" content="ie=edge">
+              <title>Github is not supporting dynamic routing.</title>
+              <script>
+              // Redirect any 404 requests to index.html for SPA handling
+              const pathname = window.location.pathname;
+              alert(pathname);
+              //window.location.replace(`https://naser09.github.io/pages/${pathname}`);
+              </script>
+              </head>
+              <body>
+              <h1>
+              Github Don\'t support dynamic routing.. redirecting ...
+              </h1>
+              </body>
+              </html>' > 404.html
           git add ./* && git reset -- ./*/*
           git add pages
           git add icons
@@ -64,7 +86,7 @@ jobs:
           ls -la
           
           # Create commit
-          git commit -m "updated all pages v1."
+          git commit -m "pushed by github actions"
           
           # Force push to main
           git push --force origin temp_branch:main
