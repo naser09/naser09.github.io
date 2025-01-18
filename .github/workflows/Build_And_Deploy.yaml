@@ -80,7 +80,6 @@ jobs:
           EOL
           echo "hello"
           git add ./* && git reset -- ./*/*
-          git reset .site
           git add pages
           git add icons
           
