@@ -37,7 +37,6 @@ jobs:
           ./gradlew :site:kobwebStop
 
       - name: Prepare and Push to Main
-        continue-on-error: true
         run: |
           # Configure git
           git config --global user.name "github-actions[bot]"
@@ -69,19 +68,19 @@ jobs:
               <script>
               // Redirect any 404 requests to index.html for SPA handling
               const pathname = window.location.pathname;
-              alert(pathname);
-              //window.location.replace(`https://naser09.github.io/pages/${pathname}`);
+              window.location.replace(`https://naser09.github.io/pages/${pathname}`);
               </script>
               </head>
               <body>
               <h1>
-              Github Don\'t support dynamic routing.. redirecting ...
+              Github Don't support dynamic routing.. redirecting ...
               </h1>
               </body>
               </html>'
           EOL
           echo "hello"
           git add ./* && git reset -- ./*/*
+          git reset .site
           git add pages
           git add icons
           
