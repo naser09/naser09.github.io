@@ -67,8 +67,8 @@ jobs:
               <title>Github is not supporting dynamic routing.</title>
               <script>
               // Redirect any 404 requests to index.html for SPA handling
-              const pathname = window.location.pathname;
-              window.location.replace(`https://naser09.github.io/pages/${pathname}`);
+              //const pathname = window.location.pathname;
+              window.location.replace(`https://naser09.github.io`);
               </script>
               </head>
               <body>
