@@ -6,16 +6,23 @@ import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.selectors.focus
+import com.varabyte.kobweb.silk.style.selectors.focusVisible
 import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.style.selectors.outOfRange
+import com.varabyte.kobweb.silk.style.toAttrs
 import com.varabyte.kobweb.silk.style.toModifier
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.attributes.placeholder
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.Color.aquamarine
 import org.jetbrains.compose.web.css.Color.black
@@ -94,6 +101,54 @@ val TerminalStyle = CssStyle {
     }
 }
 
+val InputMobileStyle = CssStyle {
+    base {
+        Modifier.fontSize(FontSize.Medium)
+        .padding(0.px) // Remove padding
+        .margin(0.px) // Remove margin
+        .border(0.px) // Remove border
+        .outline(0.px) // Remove outline
+        .backgroundColor(BackgroundColor.Transparent) // Transparent background
+        .color(green) // Text
+        .styleModifier {
+            property("outline", "none")
+            property("border", "none")
+            property("-webkit-appearance","none")
+            property("box-shadow","none")
+        }
+    }
+    focus{
+        Modifier
+            .padding(0.px) // Remove padding
+            .margin(0.px) // Remove margin
+            .border(0.px) // Remove border
+            .outline(0.px)
+            .backgroundColor(BackgroundColor.Transparent) // Transparent background
+            .color(green) // Text
+            .styleModifier {
+                property("outline", "none")
+                property("border", "none")
+                property("-webkit-appearance","none")
+                property("box-shadow","none")
+            }
+    }
+    focusVisible{
+        Modifier
+            .padding(0.px) // Remove padding
+            .margin(0.px) // Remove margin
+            .border(0.px) // Remove border
+            .outline(0.px)
+            .backgroundColor(BackgroundColor.Transparent) // Transparent background
+            .color(green) // Text
+            .styleModifier {
+                property("outline", "none")
+                property("border", "none")
+                property("-webkit-appearance","none")
+                property("appearance","none")
+                property("box-shadow","none")
+            }
+    }
+}
 @Composable
 fun AutoTypingTerminal() {
     DisposableEffect(Unit){
@@ -263,6 +318,7 @@ fun AutoTypingTerminal() {
                 // Focus handling can be added here if needed
             }
     ) {
+        val breakpoint = rememberBreakpoint()
         Div(attrs = Modifier
             .fillMaxSize()
             .padding(8.px)
@@ -283,17 +339,22 @@ fun AutoTypingTerminal() {
                     }
                 }
             }
-
             // Display terminal history
             terminalState.outputs.forEach { output ->
                 Div {
                     Text(directoryPrompt + output.first.command +"\n")
                     Text(output.second.content)
-                    Input(InputType.Hidden, attrs = Modifier.id("input").toAttrs())
-//                    if (output.type == OutputType.COMMAND) {
-//                    } else {
-//                        Text(output.content)
-//                    }
+
+                    // ++++++++++++++++++++  mobile ---------
+//                    Input(InputType.Text, attrs = Modifier
+//                        .backgroundColor(BackgroundColor.Transparent)
+//                        .id("input")
+//                        .toAttrs {
+//                            onInput {
+//                                userInput += it.value
+//                            }
+//                        })
+                    //+++++++++++++++++++++++++++=
                 }
             }
 
@@ -308,16 +369,26 @@ fun AutoTypingTerminal() {
             // Display current input line
             if (isTypingDone && animatingOutput == null) {
                 Div {
-                    Text(directoryPrompt + userInput)
-                    Span(
-                        Modifier
-                            .width(10.px)
-                            .toAttrs()
-                    ) {
-                        if (cursorVisible) {
-                            Text("┃")
+                    if (breakpoint>=Breakpoint.MD){
+                        Text(directoryPrompt + userInput)
+                        Span(
+                            Modifier
+                                .width(10.px)
+                                .toAttrs()
+                        ) {
+                            if (cursorVisible) {
+                                Text("┃")
+                            }
+                        }
+                    }else{
+                        Span {
+                            Text(directoryPrompt)
+                            Input(InputType.Text, InputMobileStyle.toAttrs {
+                                    onInput { userInput = it.value }
+                                })
                         }
                     }
+
                 }
             }
         }
