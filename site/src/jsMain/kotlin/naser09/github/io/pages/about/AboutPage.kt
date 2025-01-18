@@ -62,8 +62,8 @@ fun AboutPage() {
     BottomNavigationLayout {
         Box(
             Modifier
-                .fillMaxWidth()
-                .minHeight(100.vh)
+                .maxWidth(100.vw)
+                .overflow(Overflow.Clip)
                 .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else Color.rgb(250, 250, 250))
                 .color(if (colorMode == ColorMode.DARK) Color.rgb(240, 240, 240) else Color.rgb(33, 33, 33))
                 .margin(bottom = 13.vh)
@@ -157,6 +157,7 @@ private fun ProfileImage() {
 
 @Composable
 private fun ProfileInfo(colorMode: ColorMode, personalInfo: List<PersonalInfo>) {
+    val breakpoint = rememberBreakpoint()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -179,10 +180,15 @@ private fun ProfileInfo(colorMode: ColorMode, personalInfo: List<PersonalInfo>) 
 
             personalInfo.forEach { info ->
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    if (breakpoint>=Breakpoint.MD){
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(8.px)
+                            .gap(16.px)
+                    }else Modifier
                         .padding(8.px)
-                        .gap(16.px)
+                        .gap(8.px)
+                        .fontSize(FontSize.Small)
                 ) {
                     Span(
                         attrs = Modifier
