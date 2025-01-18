@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import com.varabyte.kobweb.browser.dom.observers.IntersectionObserver
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.styleModifier
@@ -344,17 +345,6 @@ fun AutoTypingTerminal() {
                 Div {
                     Text(directoryPrompt + output.first.command +"\n")
                     Text(output.second.content)
-
-                    // ++++++++++++++++++++  mobile ---------
-//                    Input(InputType.Text, attrs = Modifier
-//                        .backgroundColor(BackgroundColor.Transparent)
-//                        .id("input")
-//                        .toAttrs {
-//                            onInput {
-//                                userInput += it.value
-//                            }
-//                        })
-                    //+++++++++++++++++++++++++++=
                 }
             }
 
@@ -381,7 +371,7 @@ fun AutoTypingTerminal() {
                             }
                         }
                     }else{
-                        Span {
+                        Row (Modifier.overflow(Overflow.Auto)){
                             Text(directoryPrompt)
                             Input(InputType.Text, InputMobileStyle.toAttrs {
                                     onInput { userInput = it.value }
