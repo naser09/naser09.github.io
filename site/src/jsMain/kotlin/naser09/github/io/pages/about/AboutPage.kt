@@ -42,7 +42,8 @@ fun AboutPage() {
     val personalInfo = remember {
         listOf(
             PersonalInfo("Name", "Abu Naser"),
-            PersonalInfo("Location", "1440,Sonargoan,Narayanganj,Dhaka"),
+            PersonalInfo("Location", "1440,Sonargoan,Narayanganj"),
+            PersonalInfo("Country", "Bangladesh"),
             PersonalInfo("Email", "naser09@gmail.com"),
             PersonalInfo("Languages", "English, Bengali"),
             PersonalInfo("Experience", "5+ years in Kotlin Development (self-taught)")
@@ -136,6 +137,7 @@ private fun ProfileImage() {
         modifier = Modifier
             .size(300.px)
             .borderRadius(16.px)
+            .overflow(Overflow.Hidden)
             .backgroundColor(BackgroundColor.Transparent)
 
            // .boxShadow(if (colorMode == ColorMode.DARK) "0 4px 6px rgba(0, 0, 0, 0.3)" else "0 4px 6px rgba(0, 0, 0, 0.1)")

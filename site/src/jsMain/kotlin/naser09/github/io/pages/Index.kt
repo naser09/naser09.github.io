@@ -61,7 +61,10 @@ fun HomePage() {
                     }
                 }else{
                     // Hero Section with responsive layout
-                    HeroSection(colorMode)
+                    Box(Modifier.fillMaxHeight(),
+                        contentAlignment = Alignment.Center){
+                        HeroSection(colorMode)
+                    }
                     // Tech Stack
                     TechStackSection()
                 }

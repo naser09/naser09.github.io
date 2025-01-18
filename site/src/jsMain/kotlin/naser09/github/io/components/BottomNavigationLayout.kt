@@ -111,6 +111,7 @@ val BottomNavBackDropStyle = CssStyle {
             .padding(leftRight = 10.px, topBottom = 6.px)
             .bottom(12.px)
             .borderRadius(12.px)
+            .margin(leftRight = 2.5.vw)
     }
     Breakpoint.MD{
         Modifier
@@ -155,7 +156,8 @@ fun BottomNavigationLayout(
     val ctx = rememberPageContext()
     var colorMode by ColorMode.currentState
     val breakpoint = rememberBreakpoint()
-    Box(modifier = Modifier.fillMaxSize(100.percent)) {
+    Box(modifier = Modifier
+        .fillMaxSize(100.percent)) {
         // Main content
         Box(Modifier.fillMaxSize().zIndex(0)) {
             content()
@@ -170,9 +172,7 @@ fun BottomNavigationLayout(
         // Navigation container with backdrop blur
             Row(
                 modifier = BottomNavBackDropStyle.
-                toModifier()
-                    .id("bottom_nav")
-                    .justifySelf(JustifySelf.Center),
+                toModifier(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
