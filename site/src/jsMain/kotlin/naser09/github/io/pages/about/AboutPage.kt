@@ -20,45 +20,21 @@ import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import naser09.github.io.components.BottomNavigationLayout
+import naser09.github.io.components.DataStore
 import naser09.github.io.components.PageHeader
+import naser09.github.io.components.model.PersonalInfo
+import naser09.github.io.components.model.Skill
 
-private data class PersonalInfo(
-    val label: String,
-    val value: String
-)
-
-private data class Skill(
-    val name: String,
-    val proficiency: Int, // 0-100
-    val description: String
-)
 
 @Page("/about")
 @Composable
 fun AboutPage() {
     val colorMode by ColorMode.currentState
     val breakpoint = rememberBreakpoint()
-
-    val personalInfo = remember {
-        listOf(
-            PersonalInfo("Name", "Abu Naser"),
-            PersonalInfo("Location", "1440,Sonargoan,Narayanganj"),
-            PersonalInfo("Country", "Bangladesh"),
-            PersonalInfo("Email", "naser09@gmail.com"),
-            PersonalInfo("Languages", "English, Bengali"),
-            PersonalInfo("Experience", "5+ years in Kotlin Development (self-taught)")
-        )
+    LaunchedEffect(Unit){
+        DataStore.loadPersonalInfo()
+        DataStore.loadPersonalSkill()
     }
-
-    val skills = remember {
-        listOf(
-            Skill("Kotlin", 90, "Expert in Kotlin development with focus on multiplatform projects"),
-            Skill("Android", 90, "Professional Android app development experience"),
-            Skill("Compose", 80, "Strong expertise in Jetpack Compose and Compose Multiplatform"),
-            Skill("Web Development", 75, "Full-stack development using Kotlin/JS and KobWeb")
-        )
-    }
-
     BottomNavigationLayout {
         Box(
             Modifier
@@ -79,8 +55,10 @@ fun AboutPage() {
                     icon = if (colorMode.isLight) "icons/identity.svg" else "icons/identity-white.svg"
                     ,""
                 )
-
-                AboutContent(colorMode, breakpoint, personalInfo, skills)
+                AboutContent(colorMode, breakpoint,
+                    DataStore.personalInfo.value?: emptyList(),
+                    DataStore.personalSkill.value?: emptyList()
+                )
             }
         }
     }

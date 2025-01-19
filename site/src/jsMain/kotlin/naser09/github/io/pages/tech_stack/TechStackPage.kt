@@ -2,6 +2,10 @@ package naser09.github.io.pages.tech_stack
 
 import androidx.compose.runtime.*
 import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.AlignItems
+import com.varabyte.kobweb.compose.css.JustifyContent
+import com.varabyte.kobweb.compose.dom.svg.Path
+import com.varabyte.kobweb.compose.dom.svg.Svg
 import com.varabyte.kobweb.compose.foundation.layout.*
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -21,252 +25,23 @@ import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import naser09.github.io.components.BottomNavigationLayout
+import naser09.github.io.components.DataStore
+import naser09.github.io.components.DataStore.technologies
 import naser09.github.io.components.PageHeader
+import naser09.github.io.components.model.Proficiency
+import naser09.github.io.components.model.TechCategory
+import naser09.github.io.components.model.Technology
 import org.jetbrains.compose.web.css.Color.white
 import org.jetbrains.compose.web.css.Color.black
-
-private data class Technology(
-    val name: String,
-    val proficiency: Proficiency,
-    val category: TechCategory,
-    val description: String,
-    val experienceYears: Float,
-    val iconPath: String? = null,
-    val fontAwesomeIcon:(@Composable (size:IconSize)->Unit)? = null
-)
-
-private enum class TechCategory(val displayName: String) {
-    LANGUAGES("Languages"),
-    MOBILE("Mobile"),
-    BACKEND("Backend"),
-    DATABASE("Database"),
-    CLOUD("Cloud & DevOps"),
-    FRONTEND("Frontend"),
-    TOOLS("Tools")
-}
-
-private enum class Proficiency(val displayName: String, val darkColor: Color, val lightColor: Color) {
-    EXPERT("Expert",
-        darkColor = Color.rgba(22, 163, 74, 0.3f),
-        lightColor = Color.rgba(22, 163, 74, 0.2f)
-    ),
-    ADVANCED("Advanced",
-        darkColor = Color.rgba(234, 88, 12, 0.3f),
-        lightColor = Color.rgba(234, 88, 12, 0.2f)
-    ),
-    INTERMEDIATE("Intermediate",
-        darkColor = Color.rgba(234, 179, 8, 0.3f),
-        lightColor = Color.rgba(234, 179, 8, 0.2f)
-    ),
-    BEGINNER("Learning",
-        darkColor = Color.rgba(59, 130, 246, 0.3f),
-        lightColor = Color.rgba(59, 130, 246, 0.2f)
-    )
-}
-
-private val technologies = listOf(
-    // Languages
-    Technology(
-        "Kotlin",
-        Proficiency.EXPERT,
-        TechCategory.LANGUAGES,
-        "Primary language for Android, KMP, and backend development. Extensive experience in coroutines and flow.",
-        5.5f
-    ),
-    Technology(
-        "Java",
-        Proficiency.ADVANCED,
-        TechCategory.LANGUAGES,
-        "Used for Android development and backend services. Strong knowledge of Java 8+ features.",
-        2.0f,
-        fontAwesomeIcon = { FaJava(size = it) }
-    ),
-    Technology(
-        "Python",
-        Proficiency.INTERMEDIATE,
-        TechCategory.LANGUAGES,
-        "Basic problem solving and a single django project",
-        0.6f,
-        fontAwesomeIcon = { FaPython(size = it) }
-    ),
-    Technology(
-        "Swift",
-        Proficiency.BEGINNER,
-        TechCategory.LANGUAGES,
-        "Basic problem solving and some api that required in KMP projects",
-        0.6f,
-        fontAwesomeIcon = { FaSwift(size = it) }
-    ),
-    Technology(
-        "PHP",
-        Proficiency.INTERMEDIATE,
-        TechCategory.LANGUAGES,
-        "Basic knowledge about PHP",
-        0.8f,
-        fontAwesomeIcon = { FaPhp(size = it) }
-    ),
-
-    // Mobile Development
-    Technology(
-        "Jetpack Compose",
-        Proficiency.EXPERT,
-        TechCategory.MOBILE,
-        "Modern Android UI development with declarative paradigm. Built multiple production apps.",
-        3.0f,
-        iconPath = "icons/compose.webp"
-    ),
-    Technology(
-        "Swift UI",
-        Proficiency.BEGINNER,
-        TechCategory.MOBILE,
-        "Modern iOS UI development with declarative paradigm. Built basic apps with it.",
-        3.0f,
-        fontAwesomeIcon = { FaSwift(size = it) }
-    ),
-    Technology(
-        "Android SDK",
-        Proficiency.EXPERT,
-        TechCategory.MOBILE,
-        "Comprehensive knowledge of Android framework, lifecycle, and architecture components.",
-        5.5f,
-        fontAwesomeIcon = { FaAndroid(size = it) }
-    ),
-    Technology(
-        "KMP",
-        Proficiency.EXPERT,
-        TechCategory.MOBILE,
-        "Kotlin Multiplatform for shared logic between Android and iOS applications.",
-        2.5f,
-        iconPath = "icons/kotlin.svg"
-    ),
-
-    // Backend
-    Technology(
-        "Ktor",
-        Proficiency.EXPERT,
-        TechCategory.BACKEND,
-        "Building scalable backend services and RESTful APIs with Kotlin.",
-        3.5f,
-        fontAwesomeIcon = { FaServer(size = it) }
-    ),
-    Technology(
-        "Laravel",
-        Proficiency.INTERMEDIATE,
-        TechCategory.BACKEND,
-        "Java-based framework for creating microservices and web applications.",
-        3.0f,
-        fontAwesomeIcon = { FaLaravel(size = it) }
-    ),
-    Technology(
-        "GraphQL",
-        Proficiency.INTERMEDIATE,
-        TechCategory.BACKEND,
-        "API development with GraphQL for flexible data querying.",
-        1.5f
-    ),
-
-    // Database
-    Technology(
-        "PostgreSQL",
-        Proficiency.INTERMEDIATE,
-        TechCategory.DATABASE,
-        "Primary database for production applications. Experience with performance optimization.",
-        4.0f,
-        iconPath = "icons/sql.svg"
-    ),
-    Technology(
-        "MySQL",
-        Proficiency.ADVANCED,
-        TechCategory.DATABASE,
-        "Primary database for production applications. Experience with performance optimization.",
-        4.0f,
-        iconPath = "icons/sql.svg"
-    ),
-    Technology(
-        "MongoDB",
-        Proficiency.INTERMEDIATE,
-        TechCategory.DATABASE,
-        "NoSQL database for flexible data storage needs.",
-        2.0f,
-        iconPath = "icons/db.svg"
-    ),
-    Technology(
-        "Redis",
-        Proficiency.ADVANCED,
-        TechCategory.DATABASE,
-        "In-memory data structure store used for caching and real-time data.",
-        3.0f,
-        iconPath = "icons/db.svg"
-    ),
-
-    // Cloud & DevOps
-    Technology(
-        "Docker",
-        Proficiency.BEGINNER,
-        TechCategory.CLOUD,
-        "Containerization for microservices and application deployment.",
-        3.0f,
-        fontAwesomeIcon = { FaDocker(size = it) }
-    ),
-    Technology(
-        "Github Actions",
-        Proficiency.BEGINNER,
-        TechCategory.CLOUD,
-        "Understand and to the bare minimum about GitHub Actions. check this website repo > kobweb_latest branch .",
-        2.0f,
-        fontAwesomeIcon = { FaGithub(size = it) }
-    ),
-    Technology(
-        "VPS Server",
-        Proficiency.ADVANCED,
-        TechCategory.CLOUD,
-        "Have Experience on running a vps server with Debian and ubuntu.",
-        3.5f,
-        fontAwesomeIcon = { FaLinux(size = it) }
-    ),
-
-    // Frontend
-    Technology(
-        "HTML/CSS",
-        Proficiency.ADVANCED,
-        TechCategory.FRONTEND,
-        "Web development fundamentals with modern CSS features.",
-        4.0f,
-        fontAwesomeIcon = { FaHtml5(size = it) }
-    ),
-
-    // Tools
-    Technology(
-        "Git",
-        Proficiency.INTERMEDIATE,
-        TechCategory.TOOLS,
-        "Version control and collaboration with Git and GitHub.",
-        5.0f,
-        fontAwesomeIcon = { FaGit(size = it) }
-    ),
-    Technology(
-        "CI/CD",
-        Proficiency.BEGINNER,
-        TechCategory.TOOLS,
-        "Automated testing and deployment pipelines with Jenkins and GitHub Actions.",
-        3.5f,
-        fontAwesomeIcon = { FaRobot(size = it) }
-    ),
-    Technology(
-        "Gradle",
-        Proficiency.EXPERT,
-        TechCategory.TOOLS,
-        "Build automation and dependency management for JVM projects.",
-        4.0f
-    )
-)
 
 @Page("/tech_stack")
 @Composable
 fun TechStackPage() {
     val colorMode by ColorMode.currentState
     val breakpoint = rememberBreakpoint()
-
+    LaunchedEffect(Unit){
+        DataStore.loadTechStack()
+    }
     BottomNavigationLayout {
         Box(
             Modifier
@@ -319,10 +94,10 @@ private fun TechStackContent(colorMode: ColorMode, breakpoint: Breakpoint) {
         )
         HorizontalDivider(Modifier.fillMaxWidth().height(1.vh))
         // Tech Grid
-        val filteredTech = technologies.filter { tech ->
+        val filteredTech = technologies.value?.filter { tech ->
             (selectedCategory == null || tech.category == selectedCategory) &&
                     (selectedProficiency == null || tech.proficiency == selectedProficiency)
-        }
+        }?: emptyList()
 
         TechGrid(
             technologies = filteredTech,
@@ -403,7 +178,7 @@ private fun Filters(
                     onClick = { onProficiencySelected(proficiency) },
                     colorMode = colorMode,
                     backgroundColor = if (proficiency == selectedProficiency) {
-                        if (colorMode == ColorMode.DARK) proficiency.darkColor else proficiency.lightColor
+                        if (colorMode == ColorMode.DARK) proficiency.darkColor.toRGBA() else proficiency.lightColor.toRGBA()
                     } else null
                 )
             }
@@ -491,25 +266,11 @@ private fun TechCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Tech Icon
-            Box(
-                modifier = Modifier
-                    .size(56.px)
-                    .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(40, 40, 40) else Color.rgb(235, 235, 235))
-                    .borderRadius(12.px)
-                    .display(DisplayStyle.Flex)
-                    .alignItems(org.jetbrains.compose.web.css.AlignItems.Center)
-                    .justifyContent(com.varabyte.kobweb.compose.css.JustifyContent.Center)
-            ) {
-                if (tech.fontAwesomeIcon!=null){
-                    tech.fontAwesomeIcon.invoke(if (breakpoint>Breakpoint.MD) IconSize.XL else IconSize.LG)
-                }else{
-                    Image(
-                        src = tech.iconPath ?: "/icons/${tech.name.lowercase()}.svg",
-                        modifier = Modifier.size(32.px)
-                    )
-                }
-            }
-
+            TechnologyImage(
+                technology = tech,
+                colorMode = colorMode,
+                breakpoint = breakpoint
+            )
             // Tech Name
             H3(
                 attrs = Modifier
@@ -554,11 +315,73 @@ private fun TechCard(
     }
 }
 
+
+@Composable
+private fun TechnologyImage(
+    technology: Technology,
+    colorMode: ColorMode,
+    breakpoint: Breakpoint,
+    modifier: Modifier = Modifier
+) {
+    // Dynamic sizes based on breakpoint
+    val containerSize = when {
+        breakpoint > Breakpoint.MD -> 64.px
+        breakpoint > Breakpoint.SM -> 56.px
+        else -> 48.px
+    }
+
+    val imageSize = when {
+        breakpoint > Breakpoint.MD -> 40.px
+        breakpoint > Breakpoint.SM -> 32.px
+        else -> 24.px
+    }
+
+    Box(
+        modifier = modifier
+            .size(containerSize)
+            .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(40, 40, 40) else Color.rgb(235, 235, 235))
+            .borderRadius(12.px)
+            .display(DisplayStyle.Flex)
+            .alignItems(AlignItems.Center)
+            .justifyContent(JustifyContent.Center)
+    ) {
+        when {
+            technology.svg != null -> {
+                Svg(
+                    attrs = {
+                        attr("viewBox", technology.svg.viewBox)
+                        attr("width", imageSize.toString())
+                        attr("height", imageSize.toString())
+                        attr("fill", "currentColor")
+                    }
+                ) {
+                    Path(
+                        attrs = {
+                            attr("d", technology.svg.d)
+                        }
+                    )
+                }
+            }
+            technology.iconUrl != null -> {
+                Image(
+                    src = technology.iconUrl,
+                    modifier = Modifier.size(imageSize)
+                )
+            }
+            else -> {
+                Image(
+                    src = technology.iconPath ?: "/icons/${technology.name.lowercase()}.svg",
+                    modifier = Modifier.size(imageSize)
+                )
+            }
+        }
+    }
+}
 private fun getProficiencyColor(proficiency: Proficiency,isDark:Boolean): Color {
     return when(proficiency){
-        Proficiency.EXPERT -> if (isDark) Proficiency.EXPERT.darkColor else Proficiency.EXPERT.lightColor
-        Proficiency.ADVANCED -> if (isDark) Proficiency.ADVANCED.darkColor else Proficiency.ADVANCED.lightColor
-        Proficiency.INTERMEDIATE -> if (isDark) Proficiency.INTERMEDIATE.darkColor else Proficiency.INTERMEDIATE.lightColor
-        Proficiency.BEGINNER -> if (isDark) Proficiency.BEGINNER.darkColor else Proficiency.BEGINNER.lightColor
+        Proficiency.EXPERT -> if (isDark) Proficiency.EXPERT.darkColor.toRGBA() else Proficiency.EXPERT.lightColor.toRGBA()
+        Proficiency.ADVANCED -> if (isDark) Proficiency.ADVANCED.darkColor.toRGBA() else Proficiency.ADVANCED.lightColor.toRGBA()
+        Proficiency.INTERMEDIATE -> if (isDark) Proficiency.INTERMEDIATE.darkColor.toRGBA() else Proficiency.INTERMEDIATE.lightColor.toRGBA()
+        Proficiency.BEGINNER -> if (isDark) Proficiency.BEGINNER.darkColor.toRGBA() else Proficiency.BEGINNER.lightColor.toRGBA()
     }
 }

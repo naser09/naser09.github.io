@@ -14,18 +14,20 @@ import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.focus
 import com.varabyte.kobweb.silk.style.selectors.focusVisible
 import com.varabyte.kobweb.silk.style.selectors.hover
-import com.varabyte.kobweb.silk.style.selectors.outOfRange
 import com.varabyte.kobweb.silk.style.toAttrs
 import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.builtins.ListSerializer
+import naser09.github.io.components.DataStore
+import naser09.github.io.components.model.*
 import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.attributes.placeholder
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.css.Color.aquamarine
 import org.jetbrains.compose.web.css.Color.black
 import org.jetbrains.compose.web.css.Color.green
 import org.jetbrains.compose.web.dom.Div
@@ -35,7 +37,6 @@ import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
-import org.w3c.dom.events.FocusEvent
 import org.w3c.dom.events.KeyboardEvent
 
 // Data classes for structured output
@@ -175,7 +176,9 @@ fun AutoTypingTerminal() {
         }
     }
     var displayedText by remember { mutableStateOf("") }
-    val fullText = "Welcome to my portfolio! I'm a passionate self-taught Kotlin Multiplatform developer with a knack for building cross-platform apps that work seamlessly on Android, iOS, web, and desktop.\n" +
+    val fullText = "testing"
+
+        val d = "Welcome to my portfolio! I'm a passionate self-taught Kotlin Multiplatform developer with a knack for building cross-platform apps that work seamlessly on Android, iOS, web, and desktop.\n" +
             "\n" +
             "Here, you’ll find projects that showcase my journey, skills, and dedication to creating efficient, user-friendly, and visually appealing applications. Whether it’s crafting intuitive UIs, optimizing backend logic, or exploring new technologies, I’m always eager to learn and improve.\n" +
             "\n" +
@@ -189,19 +192,9 @@ fun AutoTypingTerminal() {
     var currentAnimatedText by remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
-
-    // Define available commands
-    val commands = remember {
-        mapOf(
-            "help" to "Available commands: help, clear, about, projects , hi/hello ",
-            "hi" to fullText,
-            "hello" to fullText,
-            "about" to "I'm a software developer passionate about Kotlin and Android development.",
-            "projects" to "1. Project A - Android App\n2. Project B - Web Application",
-            "clear" to "CLEAR_COMMAND"
-        )
+    LaunchedEffect(Unit){
+        DataStore.loadTerminalCommands()
     }
-
     // Auto-scroll function
     fun scrollToBottom() {
         val terminalElement = document.getElementById("terminal_container")
@@ -252,7 +245,37 @@ fun AutoTypingTerminal() {
             cursorVisible = !cursorVisible
         }
     }
-
+    suspend fun<T> getDate(command: String,
+                           serializationStrategy: SerializationStrategy<T>,
+                           default:T?=null,
+                           hideKeys: Boolean = true,
+                           useNumbering: Boolean = false,
+                           indentSize: Int = 4,
+                           itemPerLine:Int = 0,
+                           loader:suspend ()->T){
+        var data = default
+        animatingOutput  = TerminalOutput(command,"Downloading.",OutputType.COMMAND)
+        if (data==null){
+            val job = scope.launch {
+                data = loader()
+            }
+            var loading = "Downloading."
+            while (job.isActive){
+                currentAnimatedText = loading
+                delay(300)
+                scrollToBottom()
+                loading+="."
+            }
+        }
+        animateText(
+            TerminalCommand(command,0),
+            TerminalOutput(
+                command,data?.let {
+                    DataStore.prettyPrint(serializationStrategy,it,hideKeys, useNumbering, indentSize, itemPerLine)
+                }?:"No data found",OutputType.COMMAND
+            )
+        )
+    }
     // Handle keyboard input
     DisposableEffect(Unit) {
         val keyboardListener = object :EventListener{
@@ -264,27 +287,113 @@ fun AutoTypingTerminal() {
                             if (userInput.isNotEmpty()) {
                                 val command = userInput.trim().lowercase()
                                 val commandOutput = TerminalCommand(userInput)
-
-                                when {
-                                    command == "clear" -> {
+                                when{
+                                    command == "clear" ->{
                                         terminalState = TerminalState()
+                                        userInput =""
                                     }
-                                    commands.containsKey(command) -> {
-                                        val output = commands[command] ?: ""
+                                    else ->{
+                                        val dataStoreCommands = DataStore.terminalCommands.value?.map { it.command to it }?.toMap()?: emptyMap()
                                         scope.launch {
-//                                            terminalState = terminalState.copy(
-//                                                commands = terminalState.commands + commandOutput
-//                                            )
-//
-                                            animateText(commandOutput,TerminalOutput(commandOutput.command,output, OutputType.RESPONSE))
-                                        }
-                                    }
-                                    else -> {
-                                        scope.launch {
-//                                            terminalState = terminalState.copy(
-//                                                commands = terminalState.commands + commandOutput
-//                                            )
-                                            animateText(commandOutput,TerminalOutput(commandOutput.command,"Command not found: $command", OutputType.ERROR))
+                                            val result = CommandHelper.executeCommand(
+                                                dataStoreCommands,
+                                                command
+                                            ){com ,args->
+                                                console.log("args : $args")
+                                                val showJsonKey = args.any { it == "-k" || it =="key" }
+                                                val showNumeric = args.any { it == "-n" || it == "n"}
+                                                val itemCount = args.getOrNull(args.indexOf("-i")+1)?.toIntOrNull()?:2
+                                                console.log("key $showJsonKey")
+                                                console.log("num $showNumeric")
+                                                console.log("item $itemCount")
+                                                when(com.command){
+                                                    "about"->{
+                                                        if (args.contains("skill")){
+                                                            getDate(
+                                                                command,
+                                                                ListSerializer(Skill.serializer()),
+                                                                DataStore.personalSkill.value,
+                                                                hideKeys = !showJsonKey,
+                                                                useNumbering = showNumeric,
+                                                                itemPerLine = itemCount + 1
+                                                            ) {
+                                                                DataStore.loadPersonalSkill()
+                                                                DataStore.personalSkill.value ?: emptyList()
+                                                            }
+                                                        }else {
+                                                            getDate(
+                                                                command,
+                                                                ListSerializer(PersonalInfo.serializer()),
+                                                                DataStore.personalInfo.value,
+                                                                hideKeys = !showJsonKey,
+                                                                useNumbering = showNumeric,
+                                                                itemPerLine = itemCount + 1
+                                                            ) {
+                                                                DataStore.loadPersonalInfo()
+                                                                DataStore.personalInfo.value ?: emptyList()
+                                                            }
+                                                        }
+                                                    }
+                                                    "academic"->{
+                                                        getDate(
+                                                            command,
+                                                            ListSerializer(Academic.serializer()),
+                                                            DataStore.academic.value,
+                                                            hideKeys = !showJsonKey,
+                                                            useNumbering = showNumeric,
+                                                            itemPerLine = itemCount
+                                                        ){
+                                                            DataStore.loadAcademic()
+                                                            DataStore.academic.value?: emptyList()
+                                                        }
+                                                    }
+                                                    "videos" ->{
+                                                        getDate(
+                                                            command,
+                                                            ListSerializer(VideoItem.serializer()),
+                                                            DataStore.videos.value,
+                                                            hideKeys = !showJsonKey,
+                                                            useNumbering = showNumeric,
+                                                            itemPerLine = itemCount
+                                                        ){
+                                                            DataStore.loadVideos()
+                                                            DataStore.videos.value?: emptyList()
+                                                        }
+                                                    }
+                                                    "stacks" ->{
+                                                        getDate(
+                                                            command,
+                                                            ListSerializer(Technology.serializer()),
+                                                            DataStore.technologies.value,
+                                                            hideKeys = !showJsonKey,
+                                                            useNumbering = showNumeric,
+                                                            itemPerLine = itemCount
+                                                        ){
+                                                            DataStore.loadTechStack()
+                                                            DataStore.technologies.value?: emptyList()
+                                                        }
+                                                    }
+                                                    "projects"->{
+                                                        getDate(
+                                                            command,
+                                                            ListSerializer(Project.serializer()),
+                                                            DataStore.projects.value,
+                                                            hideKeys = !showJsonKey,
+                                                            useNumbering = showNumeric,
+                                                            itemPerLine = itemCount
+                                                        ){
+                                                            DataStore.loadProjects()
+                                                            DataStore.projects.value?: emptyList()
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (result!=""){
+                                                animateText(
+                                                    commandOutput,
+                                                    TerminalOutput(command,CommandHelper.executeCommand(dataStoreCommands,command),OutputType.COMMAND)
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -297,6 +406,7 @@ fun AutoTypingTerminal() {
                             }
                         }
                         else -> {
+                            keyboardEvent.preventDefault()
                             if (keyboardEvent.key.length == 1) {
                                 userInput += keyboardEvent.key
                             }

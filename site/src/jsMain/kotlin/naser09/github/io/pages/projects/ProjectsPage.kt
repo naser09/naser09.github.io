@@ -23,7 +23,10 @@ import com.varabyte.kobweb.silk.style.selectors.hover
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import kotlinx.coroutines.delay
 import naser09.github.io.components.BottomNavigationLayout
+import naser09.github.io.components.DataStore
 import naser09.github.io.components.PageHeader
+import naser09.github.io.components.model.Project
+import naser09.github.io.components.model.ProjectType
 import naser09.github.io.toSitePalette
 import org.jetbrains.compose.web.attributes.ATarget
 import org.jetbrains.compose.web.attributes.target
@@ -33,19 +36,6 @@ import org.jetbrains.compose.web.css.Color.white
 import org.jetbrains.compose.web.dom.*
 import kotlin.time.Duration.Companion.seconds
 
-private data class Project(
-    val title: String,
-    val description: String,
-    val technologies: List<String>,
-    val type: ProjectType,
-    val releaseLink: String? = null,
-    val githubLink: String? = null,
-    val images: List<String> // Updated to support multiple images
-)
-
-private enum class ProjectType {
-    PRODUCTION, OPEN_SOURCE, PET_PROJECT, FREELANCE , YOUTUBE ,IN_PROGRESS
-}
 
 val ProjectCardStyle = CssStyle {
     base {
@@ -71,7 +61,9 @@ val ProjectCardStyle = CssStyle {
 @Composable
 fun ProjectsPage() {
     val colorMode by ColorMode.currentState
-
+    LaunchedEffect(Unit){
+        DataStore.loadProjects()
+    }
     BottomNavigationLayout {
         Box(
             Modifier
@@ -100,81 +92,6 @@ fun ProjectsPage() {
 
 @Composable
 private fun ProjectsGrid(colorMode: ColorMode) {
-    val projects = listOf(
-        Project(
-            title = "Lineage note: Cherry tree notes",
-            description = "A note-taking app with a focus on streamlined navigation and modern design.",
-            technologies = listOf(
-                "androidx navigation", "jetpack compose", "admob", "Material 3",
-                "room database", "shared preference", "multi-module",
-                "scoped storage", "GSON", "MVVM architecture"
-            ),
-            type = ProjectType.PRODUCTION,
-            releaseLink = "https://play.google.com/store/apps/details?id=com.blogspot.lineagenote",
-            githubLink = null,
-            images = listOf()
-        ),
-        Project(
-            title = "PDF Tools: Web2PDF, Merge, Split",
-            description = "A comprehensive PDF utility app for creating and managing PDF files.",
-            technologies = listOf(
-                "androidx", "jetpack compose", "Material 3", "shared preference",
-                "multi-module", "MVVM architecture", "web view", "PDF Box"
-            ),
-            type = ProjectType.PRODUCTION,
-            releaseLink = "https://play.google.com/store/apps/details?id=com.blogspot.web2pdf",
-            githubLink = null,
-            images = listOf() // Add image URLs here if available
-        ),    Project(
-            title = "KMP Note Pad app with YouTube playlist",
-            description = "An Kotlin Multiplatform app with a complete development tutorial available on YouTube.",
-            technologies = listOf(
-                "kotlin", "swift", "xcode", "android studio", "kotlin multiplatform",
-                "sqlDelight", "decompose", "RxKotlin", "coroutine", "MviKotlin",
-                "swift UI", "multiplatform setting"
-            ),
-            type = ProjectType.YOUTUBE,
-            releaseLink = "https://www.youtube.com/playlist?list=PLXzlJ385171s7A9iEngwx3b2RlCRAbqqy",
-            githubLink = null,
-            images = listOf()
-        ),
-        Project(
-            "Ktor Backend Chat server for youtube video ,",
-            "A ktor backend server created to demonstrate how it work in my youtube video ,",
-            listOf("Kotlin", "Ktor", "SQLDelight", "kotlinX serialization","web socket"),
-            ProjectType.YOUTUBE,
-            releaseLink = "https://www.youtube.com/playlist?list=PLXzlJ385171vyDDz2eliB1CWp-FMFX06x",
-            githubLink = "https://github.com/naser09/chat_server_yt.git",
-            images = listOf(
-                "projects/kmpcommerce1.png",
-                "projects/kmpcommerce2.png",
-                "projects/kmpcommerce3.png"
-            )
-        ),
-        Project(
-            "Kotlin multiplatform MCQ Apps",
-            "A kotlin multiplatform mcq app that uses ktor backend and authenticate users .",
-            listOf("Ktor", "PostgreSQL", "Redis", "Docker"),
-            ProjectType.PET_PROJECT,
-            githubLink = "https://github.com/naser09/MCQ_KMP.git",
-            images = listOf(
-                "projects/ktor1.png",
-                "projects/ktor2.png"
-            )
-        ),
-        Project(
-            "Laravel 10 with multiple authentication & authorization .",
-            "A kotlin multiplatform mcq app that uses ktor backend and authenticate users .",
-            listOf("Laravel 10", "PostgreSQL", "Blade Template", "PHP" , "Tailwind Css" ,"npm"),
-            ProjectType.PET_PROJECT,
-            githubLink = "https://github.com/naser09/laravel10_multi_auth.git",
-            images = listOf(
-                "projects/ktor1.png",
-                "projects/ktor2.png"
-            )
-        ),
-    )
-
     Box(
         Modifier
             .fillMaxWidth()
@@ -186,8 +103,11 @@ private fun ProjectsGrid(colorMode: ColorMode) {
                 .gap(32.px),
             numColumns = numColumns(base = 1, sm = 1, md = 2, lg = 3)
         ) {
-            projects.forEach { project ->
-                ProjectCard(project, colorMode)
+            DataStore.projects.value?.forEach {project ->
+                ProjectCard(project, colorMode)  }?:run {
+                    H2 {
+                        Text("No item found . please check your internet .")
+                    }
             }
         }
     }
