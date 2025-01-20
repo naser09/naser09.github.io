@@ -100,7 +100,7 @@ private fun SocialMediaButton() {
                 modifier = Modifier.size(5.vw).minSize(36.px).maxSize(65.px)
                 )
         },
-        "https://linkedin.com/in/naser100" to {
+        "https://www.linkedin.com/in/abu-naser-bd/" to {
             Image(src = "https://www.svgrepo.com/show/382726/linkedin-linked-in.svg",
                 alt = "github logo from svgrepo.com",
                 modifier = Modifier.size(5.vw).minSize(36.px).maxSize(65.px)
