@@ -18,19 +18,14 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.icons.fa.FaFacebook
-import com.varabyte.kobweb.silk.components.icons.fa.FaGithub
-import com.varabyte.kobweb.silk.components.icons.fa.FaLinkedin
-import com.varabyte.kobweb.silk.components.icons.fa.IconSize
-import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.toModifier
-import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import kotlinx.browser.window
 import naser09.github.io.components.SocialButtonStyle
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
+import org.jetbrains.compose.web.css.vw
 import org.jetbrains.compose.web.dom.*
 
 
@@ -98,18 +93,23 @@ import org.jetbrains.compose.web.dom.*
 
 @Composable
 private fun SocialMediaButton() {
-    val breakpoint = rememberBreakpoint()
-    val size = when(breakpoint){
-        Breakpoint.ZERO -> IconSize.SM
-        Breakpoint.SM -> IconSize.SM
-        Breakpoint.MD -> IconSize.LG
-        Breakpoint.LG -> IconSize.XL
-        Breakpoint.XL -> IconSize.XXL
-    }
     val socialLinks = listOf<Pair<String , @Composable ()->Unit>>(
-        "https://github.com/naser09" to { FaGithub(size = size) },
-        "https://linkedin.com/in/naser100" to { FaLinkedin(size = size) },
-        "https://facebook.com/naser100" to { FaFacebook(size = size) }
+        "https://github.com/naser09" to {
+            Image(src = "https://www.svgrepo.com/show/439171/github.svg",
+                alt = "github logo from svgrepo.com",
+                modifier = Modifier.size(5.vw).minSize(36.px).maxSize(65.px)
+                )
+        },
+        "https://linkedin.com/in/naser100" to {
+            Image(src = "https://www.svgrepo.com/show/382726/linkedin-linked-in.svg",
+                alt = "github logo from svgrepo.com",
+                modifier = Modifier.size(5.vw).minSize(36.px).maxSize(65.px)
+            ) },
+        "https://facebook.com/naser100" to {
+            Image(src = "https://www.svgrepo.com/show/349359/facebook.svg",
+                alt = "github logo from svgrepo.com",
+                modifier = Modifier.size(5.vw).minSize(36.px).maxSize(65.px)
+            ) }
     )
     // Social Media Buttons
     Row(

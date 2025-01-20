@@ -1,4 +1,4 @@
-package naser09.github.io.components
+package naser09.github.io.components.data_layer
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -120,7 +120,7 @@ object DataStore {
             }
 
             // If no cache, fetch from API
-            _personalInfo.value = fetchData<List<PersonalInfo>?>(MAIN_URL+"about_info.json").getOrNull()
+            _personalInfo.value = fetchData<List<PersonalInfo>?>(MAIN_URL +"about_info.json").getOrNull()
 
             // Store the fetched data
             _personalInfo.value?.let { data ->
@@ -136,7 +136,7 @@ object DataStore {
                 _commands.value = cachedData
                 return
             }
-            _commands.value = fetchData<List<Command>?>(MAIN_URL+"commands.json").getOrNull()
+            _commands.value = fetchData<List<Command>?>(MAIN_URL +"commands.json").getOrNull()
             console.log("Data fetched ${_commands.value}")
             _commands.value?.let { data ->
                 saveToLocalStorage("terminal_commands", data)
@@ -150,7 +150,7 @@ object DataStore {
                 _academic.value = cachedData
                 return
             }
-            _academic.value = fetchData<List<Academic>?>(MAIN_URL+"academic.json").getOrNull()
+            _academic.value = fetchData<List<Academic>?>(MAIN_URL +"academic.json").getOrNull()
             console.log("Data fetched ${_academic.value}")
             _academic.value?.let { data ->
                 saveToLocalStorage("academic_data", data)
@@ -164,7 +164,7 @@ object DataStore {
                 _projects.value = cachedData
                 return
             }
-            _projects.value = fetchData<List<Project>?>(MAIN_URL+"projects.json").getOrNull()
+            _projects.value = fetchData<List<Project>?>(MAIN_URL +"projects.json").getOrNull()
             console.log("Data fetched ${_projects.value}")
             _projects.value?.let { data ->
                 saveToLocalStorage("projects_data", data)
@@ -178,7 +178,7 @@ object DataStore {
                 _videos.value = cachedData
                 return
             }
-            _videos.value = fetchData<List<VideoItem>?>(MAIN_URL+"videos.json").getOrNull()
+            _videos.value = fetchData<List<VideoItem>?>(MAIN_URL +"videos.json").getOrNull()
             console.log("Data fetched ${_videos.value}")
             _videos.value?.let { data ->
                 saveToLocalStorage("videos_data", data)
@@ -192,7 +192,7 @@ object DataStore {
                 _technologies.value = cachedData
                 return
             }
-            _technologies.value = fetchData<List<Technology>?>(MAIN_URL+"technologies.json").getOrNull()
+            _technologies.value = fetchData<List<Technology>?>(MAIN_URL +"technologies.json").getOrNull()
             console.log("Data fetched ${_technologies.value}")
             _technologies.value?.let { data ->
                 saveToLocalStorage("tech_stack_data", data)
@@ -208,7 +208,7 @@ object DataStore {
                 return
             }
 
-            _personalSkill.value = fetchData<List<Skill>?>(MAIN_URL+"about_skill.json").getOrNull()
+            _personalSkill.value = fetchData<List<Skill>?>(MAIN_URL +"about_skill.json").getOrNull()
 
             _personalSkill.value?.let { data ->
 //                saveToCache("personal_skill", data)

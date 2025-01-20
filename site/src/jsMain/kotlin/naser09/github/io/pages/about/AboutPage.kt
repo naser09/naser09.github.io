@@ -20,7 +20,7 @@ import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import naser09.github.io.components.BottomNavigationLayout
-import naser09.github.io.components.DataStore
+import naser09.github.io.components.data_layer.DataStore
 import naser09.github.io.components.PageHeader
 import naser09.github.io.components.model.PersonalInfo
 import naser09.github.io.components.model.Skill

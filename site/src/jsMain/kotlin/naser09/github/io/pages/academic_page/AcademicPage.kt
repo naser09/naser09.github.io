@@ -18,9 +18,8 @@ import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
-import kotlinx.serialization.Serializable
 import naser09.github.io.components.BottomNavigationLayout
-import naser09.github.io.components.DataStore
+import naser09.github.io.components.data_layer.DataStore
 import naser09.github.io.components.PageHeader
 import naser09.github.io.components.model.Academic
 import org.jetbrains.compose.web.attributes.ATarget

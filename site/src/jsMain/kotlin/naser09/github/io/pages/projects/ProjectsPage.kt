@@ -23,7 +23,7 @@ import com.varabyte.kobweb.silk.style.selectors.hover
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import kotlinx.coroutines.delay
 import naser09.github.io.components.BottomNavigationLayout
-import naser09.github.io.components.DataStore
+import naser09.github.io.components.data_layer.DataStore
 import naser09.github.io.components.PageHeader
 import naser09.github.io.components.model.Project
 import naser09.github.io.components.model.ProjectType
@@ -103,7 +103,7 @@ private fun ProjectsGrid(colorMode: ColorMode) {
                 .gap(32.px),
             numColumns = numColumns(base = 1, sm = 1, md = 2, lg = 3)
         ) {
-            DataStore.projects.value?.forEach {project ->
+            DataStore.projects.value?.forEach { project ->
                 ProjectCard(project, colorMode)  }?:run {
                     H2 {
                         Text("No item found . please check your internet .")

@@ -24,8 +24,8 @@ import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import naser09.github.io.components.BottomNavigationLayout
-import naser09.github.io.components.DataStore
-import naser09.github.io.components.DataStore.technologies
+import naser09.github.io.components.data_layer.DataStore
+import naser09.github.io.components.data_layer.DataStore.technologies
 import naser09.github.io.components.PageHeader
 import naser09.github.io.components.model.Proficiency
 import naser09.github.io.components.model.TechCategory
