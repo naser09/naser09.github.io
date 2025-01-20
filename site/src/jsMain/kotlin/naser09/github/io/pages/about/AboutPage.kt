@@ -42,10 +42,11 @@ fun AboutPage() {
                 .overflow(Overflow.Clip)
                 .backgroundColor(if (colorMode == ColorMode.DARK) Color.rgb(18, 18, 18) else Color.rgb(250, 250, 250))
                 .color(if (colorMode == ColorMode.DARK) Color.rgb(240, 240, 240) else Color.rgb(33, 33, 33))
-                .margin(bottom = 13.vh)
+                .margin(bottom = 13.vh),
+            contentAlignment = Alignment.Center
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                Modifier.width(100.vw),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PageHeader(

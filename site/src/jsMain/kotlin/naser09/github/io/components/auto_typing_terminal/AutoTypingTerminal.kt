@@ -175,11 +175,8 @@ fun AutoTypingTerminal() {
         }
     }
     var displayedText by remember { mutableStateOf("") }
-    val fullText =  "Welcome to my portfolio! I'm a passionate self-taught Kotlin Multiplatform developer with a knack for building cross-platform apps that work seamlessly on Android, iOS, web, and desktop.\n" +
-            "\n" +
-            "Here, you’ll find projects that showcase my journey, skills, and dedication to creating efficient, user-friendly, and visually appealing applications. Whether it’s crafting intuitive UIs, optimizing backend logic, or exploring new technologies, I’m always eager to learn and improve.\n" +
-            "\n" +
-            "Feel free to explore my work and reach out if you’d like to collaborate or learn more about what I do!"
+    val fullText =  "Welcome to my portfolio! \uD83D\uDC4B\n" +
+            "I'm a self-taught Kotlin & Kotlin Multiplatform developer, passionate about building cross-platform solutions. Explore my work and let's create something amazing together!"
     val directoryPrompt = "Root@Naser:~> "
     var cursorVisible by remember { mutableStateOf(true) }
     var isTypingDone by remember { mutableStateOf(false) }
@@ -288,6 +285,14 @@ fun AutoTypingTerminal() {
                                     command == "clear" ->{
                                         terminalState = TerminalState()
                                         userInput =""
+                                    }
+                                    command == "hi" || command=="hello" ->{
+                                        scope.launch {
+                                            animateText(
+                                                TerminalCommand(command = command,0),
+                                                output = TerminalOutput(command = command,fullText,OutputType.WELCOME)
+                                            )
+                                        }
                                     }
                                     else ->{
                                         val dataStoreCommands = DataStore.terminalCommands.value?.map { it.command to it }?.toMap()?: emptyMap()

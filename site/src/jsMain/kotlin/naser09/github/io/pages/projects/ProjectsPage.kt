@@ -1,9 +1,8 @@
 package naser09.github.io.pages.projects
 
 import androidx.compose.runtime.*
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.ObjectFit
-import com.varabyte.kobweb.compose.css.TextDecorationLine
+import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -21,7 +20,11 @@ import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.hover
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import kotlinx.browser.document
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.dom.createElement
 import naser09.github.io.components.BottomNavigationLayout
 import naser09.github.io.components.data_layer.DataStore
 import naser09.github.io.components.PageHeader
@@ -34,6 +37,7 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.Color.black
 import org.jetbrains.compose.web.css.Color.white
 import org.jetbrains.compose.web.dom.*
+import org.w3c.dom.HTMLImageElement
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -41,6 +45,7 @@ val ProjectCardStyle = CssStyle {
     base {
         Modifier
             .backgroundColor(colorMode.toSitePalette().nearBackground)
+            .transition(Transition.Companion.of("transform", duration = 3000.ms, AnimationTimingFunction.Ease))
 //            .transition(Transition.group {
 //                transform(300.ms)
 //                boxShadow(300.ms)
@@ -48,8 +53,10 @@ val ProjectCardStyle = CssStyle {
     }
     hover {
         Modifier
-            .transform { scale(1.02f) }
-//            .boxShadow(0.px, 4.px, 12.px, Color.rgba(0, 0, 0, 0.1f))
+            .transform { translateY((-5).px) }
+            .styleModifier {
+                property("box-shadow", "0 10px 20px rgba(0, 0, 0, 0.2)")
+            }
     }
 
     Breakpoint.MD {
@@ -113,17 +120,47 @@ private fun ProjectsGrid(colorMode: ColorMode) {
     }
 }
 
+
 @Composable
 private fun ImageSlider(images: List<String>, modifier: Modifier = Modifier) {
+    // Cache images using remember
+    val cachedImages by remember {
+        mutableStateOf(images.map {
+            val image = document.createElement("img") as HTMLImageElement
+            image.src = it
+            image
+        }.onEach { img ->
+            img.onload = {
+                console.log("loaded $it")
+            }
+        })
+    }
+    val scope = rememberCoroutineScope()
     var currentImageIndex by remember { mutableStateOf(0) }
     var key by remember { mutableStateOf(0) }
+    var autoSlideJob by remember { mutableStateOf<Job?>(null) }
 
-    // Effect to handle auto-sliding
+    // Function to start the auto-slide timer
+    fun startAutoSlideTimer() {
+        autoSlideJob?.cancel()
+        autoSlideJob = scope.launch {
+            while (true) {
+                delay(3.seconds)
+                currentImageIndex = (currentImageIndex + 1) % images.size
+                key++
+            }
+        }
+    }
+
+    // Start the timer when the component is first created
     LaunchedEffect(Unit) {
-        while (true) {
-            delay(3.seconds)
-            currentImageIndex = (currentImageIndex + 1) % images.size
-            key++ // Force recomposition
+        startAutoSlideTimer()
+    }
+
+    // Clean up the timer when the component is disposed
+    DisposableEffect(Unit) {
+        onDispose {
+            autoSlideJob?.cancel()
         }
     }
 
@@ -152,7 +189,7 @@ private fun ImageSlider(images: List<String>, modifier: Modifier = Modifier) {
                 .position(Position.Absolute)
                 .bottom(16.px)
                 .left(50.percent)
-                .transform { translateX(-50.percent) }
+                .transform { translateX((-50).percent) }
                 .gap(8.px)
                 .zIndex(1),
             horizontalArrangement = Arrangement.Center
@@ -167,12 +204,18 @@ private fun ImageSlider(images: List<String>, modifier: Modifier = Modifier) {
                             else Color.rgba(255, 255, 255, 0.5f)
                         )
                         .cursor(Cursor.Pointer)
-                        .onClick { currentImageIndex = index }
+                        .onClick {
+                            currentImageIndex = index
+                            key++
+                            // Reset the timer when manually changing slides
+                            startAutoSlideTimer()
+                        }
                 )
             }
         }
     }
 }
+
 @Composable
 private fun ProjectCard(project: Project, colorMode: ColorMode) {
     Box(
