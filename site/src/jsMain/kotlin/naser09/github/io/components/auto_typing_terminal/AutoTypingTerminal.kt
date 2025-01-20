@@ -101,7 +101,6 @@ val TerminalStyle = CssStyle {
         Modifier.cursor(Cursor.Text)
     }
 }
-
 val InputMobileStyle = CssStyle {
     base {
         Modifier.fontSize(FontSize.Medium)
@@ -270,6 +269,10 @@ fun AutoTypingTerminal() {
             )
         )
     }
+    val commandHistory = remember {
+        mutableStateListOf<String>()
+    }
+    var lastCommand by remember { mutableStateOf(-1) }
     // Handle keyboard input
     DisposableEffect(Unit) {
         val keyboardListener = object :EventListener{
@@ -277,11 +280,36 @@ fun AutoTypingTerminal() {
                 val keyboardEvent = event as KeyboardEvent
                 if (isTypingDone && animatingOutput == null) {
                     when (keyboardEvent.key) {
+                        "ArrowUp" ->{
+                            keyboardEvent.preventDefault()
+                            if (commandHistory.isEmpty()){ return }
+                            if (lastCommand<0){
+                                userInput = commandHistory.last()
+                                lastCommand = commandHistory.lastIndex-1
+                            }else{
+                                userInput = commandHistory[lastCommand]
+                                lastCommand -= 1
+                            }
+                            scrollToBottom()
+                        }
                         "Enter" -> {
                             if (userInput.isNotEmpty()) {
                                 val command = userInput.trim().lowercase()
                                 val commandOutput = TerminalCommand(userInput)
+                                commandHistory.add(command)
                                 when{
+                                    command == "history"->{
+                                        val data = buildString {
+                                            commandHistory.forEachIndexed { index, s ->
+                                                append("    $index. $s \n")
+                                            }
+                                        }
+                                        scope.launch {
+                                            animateText(command = TerminalCommand(command = command,0),
+                                                TerminalOutput(command = command,data,OutputType.RESPONSE)
+                                            )
+                                        }
+                                    }
                                     command == "clear" ->{
                                         terminalState = TerminalState()
                                         userInput =""
@@ -417,7 +445,6 @@ fun AutoTypingTerminal() {
                 }
             }
         }
-
         window.addEventListener("keydown", keyboardListener)
         onDispose {
             window.removeEventListener("keydown", keyboardListener)
@@ -428,6 +455,8 @@ fun AutoTypingTerminal() {
         TerminalStyle.toModifier()
             .id("terminal_container")
             .onClick {
+                val input = document.getElementById("terminal_input") as? HTMLInputElement
+                input?.focus()
                 // Focus handling can be added here if needed
             }
     ) {
@@ -485,7 +514,9 @@ fun AutoTypingTerminal() {
                     }else{
                         Row (Modifier.overflow(Overflow.Auto)){
                             Text(directoryPrompt)
-                            Input(InputType.Text, InputMobileStyle.toAttrs {
+                            Input(InputType.Text, InputMobileStyle
+                                .toAttrs {
+                                    id("terminal_input")
                                     onInput { userInput = it.value }
                                 })
                         }
