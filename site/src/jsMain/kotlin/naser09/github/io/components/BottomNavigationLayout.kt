@@ -17,9 +17,7 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.rememberPageContext
-import com.varabyte.kobweb.silk.components.icons.fa.FaMoon
-import com.varabyte.kobweb.silk.components.icons.fa.FaSun
-import com.varabyte.kobweb.silk.components.icons.fa.IconSize
+import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.hover
@@ -225,9 +223,15 @@ fun TopRightControls(onClick:()->Unit) {
                 .toAttrs()
         ) {
             if (isDark) {
-                FaSun(size = IconSize.LG)
+                Image(src = "https://www.svgrepo.com/show/484700/sun.svg",
+                    modifier = Modifier.size(3.vw)
+                        .minSize(24.px)
+                        .maxSize(48.px),
+                    alt = "turn on light mode")
             } else {
-                FaMoon(size = IconSize.LG)
+                Image(src = "https://www.svgrepo.com/show/512505/moon-1248.svg",
+                    modifier = Modifier.size(3.vw).minSize(24.px).maxSize(48.px),
+                    alt = "turn on dark mode")
             }
         }
     }

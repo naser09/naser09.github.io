@@ -176,9 +176,7 @@ fun AutoTypingTerminal() {
         }
     }
     var displayedText by remember { mutableStateOf("") }
-    val fullText = "testing"
-
-        val d = "Welcome to my portfolio! I'm a passionate self-taught Kotlin Multiplatform developer with a knack for building cross-platform apps that work seamlessly on Android, iOS, web, and desktop.\n" +
+    val fullText =  "Welcome to my portfolio! I'm a passionate self-taught Kotlin Multiplatform developer with a knack for building cross-platform apps that work seamlessly on Android, iOS, web, and desktop.\n" +
             "\n" +
             "Here, you’ll find projects that showcase my journey, skills, and dedication to creating efficient, user-friendly, and visually appealing applications. Whether it’s crafting intuitive UIs, optimizing backend logic, or exploring new technologies, I’m always eager to learn and improve.\n" +
             "\n" +

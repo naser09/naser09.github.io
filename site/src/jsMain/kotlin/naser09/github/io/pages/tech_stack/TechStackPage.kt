@@ -20,7 +20,6 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
-import com.varabyte.kobweb.silk.components.icons.fa.*
 import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
@@ -352,7 +351,13 @@ private fun TechnologyImage(
                         attr("viewBox", technology.svg.viewBox)
                         attr("width", imageSize.toString())
                         attr("height", imageSize.toString())
-                        attr("fill", "currentColor")
+                        attr("fill", "#C3144")
+                        technology.svg.stroke?.let {
+                            attr("stroke", it)
+                        }
+                        technology.svg.strokeWidth?.let {
+                            attr("stroke-width", it.toString())
+                        }
                     }
                 ) {
                     Path(

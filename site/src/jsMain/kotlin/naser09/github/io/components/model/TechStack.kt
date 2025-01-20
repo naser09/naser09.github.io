@@ -13,10 +13,14 @@ data class Technology(
     val iconUrl:String?=null,
     val svg: Svg?=null
 )
+
 @Serializable
 data class Svg(
-    val viewBox:String,
-    val d:String
+    val viewBox: String,
+    val d: String,
+    val fill: String? = null,
+    val stroke: String? = null,
+    val strokeWidth: Float? = null,
 )
 @Serializable
 enum class TechCategory(val displayName: String) {
