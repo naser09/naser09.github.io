@@ -15,6 +15,7 @@ import org.w3c.fetch.RequestInit
 
 object DataStore {
     private const val  MAIN_URL =  "https://raw.githubusercontent.com/naser09/portfolio_data/refs/heads/main/"
+    const val RESUME_PDF = MAIN_URL+"resume_latest.pdf"
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {
         prettyPrint = true
