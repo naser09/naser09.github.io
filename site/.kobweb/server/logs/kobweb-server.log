@@ -1,0 +1,19 @@
+2025-02-04 09:43:25.886 [main] DEBUG io.ktor.server.Application - Java Home: /usr/lib/jvm
+2025-02-04 09:43:25.889 [main] DEBUG io.ktor.server.Application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09: [file:/home/runner/work/naser09.github.io/naser09.github.io/site/.kobweb/server/server.jar!/okio]
+2025-02-04 09:43:25.942 [main] WARN  io.ktor.server.Application - API jar specified but does not exist! Please fix conf.yaml, updating the path (or removing the value if you aren't declaring API endpoints). Invalid path: "build/libs/io.jar"
+2025-02-04 09:43:26.016 [main] INFO  io.ktor.server.Application - Application started in 0.351 seconds.
+2025-02-04 09:43:26.122 [main] INFO  io.ktor.server.Application - Responding at http://0.0.0.0:8080
+2025-02-04 09:44:09.705 [eventLoopGroupProxy-4-1] DEBUG io.ktor.server.Application - Served fallback index.html file in response to "/"
+2025-02-04 09:44:11.038 [DefaultDispatcher-worker-1] DEBUG io.ktor.server.Application - Client connected and is requesting kobweb status events.
+2025-02-04 09:44:11.277 [eventLoopGroupProxy-4-3] DEBUG io.ktor.server.Application - Served fallback index.html file in response to "/about"
+2025-02-04 09:44:12.428 [DefaultDispatcher-worker-3] DEBUG io.ktor.server.Application - Client connected and is requesting kobweb status events.
+2025-02-04 09:44:12.518 [eventLoopGroupProxy-4-1] DEBUG io.ktor.server.Application - Served fallback index.html file in response to "/academic"
+2025-02-04 09:44:13.630 [DefaultDispatcher-worker-1] DEBUG io.ktor.server.Application - Client connected and is requesting kobweb status events.
+2025-02-04 09:44:13.719 [eventLoopGroupProxy-4-2] DEBUG io.ktor.server.Application - Served fallback index.html file in response to "/projects"
+2025-02-04 09:44:14.824 [DefaultDispatcher-worker-7] DEBUG io.ktor.server.Application - Client connected and is requesting kobweb status events.
+2025-02-04 09:44:14.913 [eventLoopGroupProxy-4-3] DEBUG io.ktor.server.Application - Served fallback index.html file in response to "/tech_stack"
+2025-02-04 09:44:16.003 [DefaultDispatcher-worker-8] DEBUG io.ktor.server.Application - Client connected and is requesting kobweb status events.
+2025-02-04 09:44:16.106 [eventLoopGroupProxy-4-4] DEBUG io.ktor.server.Application - Served fallback index.html file in response to "/video"
+2025-02-04 09:44:17.191 [DefaultDispatcher-worker-1] DEBUG io.ktor.server.Application - Client connected and is requesting kobweb status events.
+2025-02-04 09:44:18.718 [kotlinx.coroutines.DefaultExecutor] INFO  io.ktor.server.Application - Kobweb server shutting down...
+2025-02-04 09:44:19.726 [kotlinx.coroutines.DefaultExecutor] INFO  io.ktor.server.Application - Server finished shutting down.
