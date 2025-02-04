@@ -72,7 +72,7 @@ val TerminalStyle = CssStyle {
             .color(green)
             .border(2.px, LineStyle.Solid, green)
             .padding(8.px)
-            .fontFamily("Courier New, monospace")
+            .fontFamily("Courier New","monospace")
             .fontSize(18.px)
             .height(60.vh)
             .overflow(Overflow.Auto)
@@ -89,7 +89,7 @@ val TerminalStyle = CssStyle {
             .color(green)
             .border(2.px, LineStyle.Solid, green)
             .padding(16.px)
-            .fontFamily("Courier New, monospace")
+            .fontFamily("Courier New","monospace")
             .fontSize(18.px)
             .height(40.vh)
             .overflow(Overflow.Auto)
@@ -201,9 +201,16 @@ fun AutoTypingTerminal() {
         animatingOutput = output
         currentAnimatedText = ""
         for (i in output.content.indices) {
+            if (output.content.get(i+1) == ' ') continue
             currentAnimatedText = output.content.substring(0, i + 1)
-            delay(30)
-            scrollToBottom()
+            if (i < 5){
+                delay(10)
+            }else if (i<50) {
+                delay(5)
+            }else delay(1)
+            if (i%20==0){
+                scrollToBottom()
+            }
         }
         // Add the completed output to terminal state
         terminalState = terminalState.copy(
@@ -220,7 +227,7 @@ fun AutoTypingTerminal() {
         val welcomeOutput = TerminalOutput("Booting.....",fullText, OutputType.WELCOME)
         for (i in welcomeOutput.content.indices) {
             displayedText ="Booting.....\n"+ welcomeOutput.content.substring(0, i + 1)
-            delay(30)
+            delay(10)
             scrollToBottom()
         }
         terminalState = terminalState.copy(
@@ -483,7 +490,7 @@ fun AutoTypingTerminal() {
             }
             // Display terminal history
             terminalState.outputs.forEach { output ->
-                Div {
+                Div{
                     Text(directoryPrompt + output.first.command +"\n")
                     Text(output.second.content)
                 }

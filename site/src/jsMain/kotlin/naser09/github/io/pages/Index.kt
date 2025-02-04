@@ -29,7 +29,7 @@ import org.jetbrains.compose.web.css.vw
 @Page
 @Composable
 fun HomePage() {
-    val  colorMode by ColorMode.currentState
+    val colorMode by ColorMode.currentState
     val breakpoint = rememberBreakpoint()
     BottomNavigationLayout {
         Box(
