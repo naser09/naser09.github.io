@@ -175,7 +175,9 @@ fun AutoTypingTerminal() {
     }
     var displayedText by remember { mutableStateOf("") }
     val fullText =  "Welcome to my portfolio! \uD83D\uDC4B\n" +
-            "I'm a self-taught Kotlin & Kotlin Multiplatform developer, passionate about building cross-platform solutions. Explore my work and let's create something amazing together!"
+            "I'm a self-taught Kotlin & Kotlin Multiplatform developer, passionate about building cross-platform solutions. " +
+            "Explore my work and let's create something amazing together! \n" +
+            "Type 'help' for more commands:"
     val directoryPrompt = "Root@Naser:~> "
     var cursorVisible by remember { mutableStateOf(true) }
     var isTypingDone by remember { mutableStateOf(false) }
